@@ -1,0 +1,347 @@
+{
+  "@@locale": "ja",
+  "appName": "Selona",
+  "@appName": {
+    "description": "The application name"
+  },
+  "tagline": "あなたのプライベートな静寂の空間",
+  "@tagline": {
+    "description": "App tagline"
+  },
+
+  "library": "ライブラリ",
+  "@library": {
+    "description": "Library screen title"
+  },
+  "settings": "設定",
+  "@settings": {
+    "description": "Settings screen title"
+  },
+  "import": "インポート",
+  "@import": {
+    "description": "Import action"
+  },
+
+  "enterPin": "PINを入力してください",
+  "@enterPin": {
+    "description": "PIN entry prompt"
+  },
+  "incorrectPin": "PINが正しくありません",
+  "@incorrectPin": {
+    "description": "Incorrect PIN message"
+  },
+  "pinSetup": "PINを設定",
+  "@pinSetup": {
+    "description": "PIN setup title"
+  },
+  "confirmPin": "PINを確認",
+  "@confirmPin": {
+    "description": "PIN confirmation prompt"
+  },
+  "pinMismatch": "PINが一致しません",
+  "@pinMismatch": {
+    "description": "PIN mismatch error"
+  },
+
+  "passphraseSetup": "パスフレーズを設定",
+  "@passphraseSetup": {
+    "description": "Passphrase setup title"
+  },
+  "passphraseDescription": "9文字のパスフレーズを入力してください",
+  "@passphraseDescription": {
+    "description": "Passphrase setup description"
+  },
+  "passphraseHint": "例: a3f7b2c1e",
+  "@passphraseHint": {
+    "description": "Passphrase hint"
+  },
+  "passphraseWarning": "警告: 忘れた場合、データを復元できません",
+  "@passphraseWarning": {
+    "description": "Passphrase warning"
+  },
+  "passphraseCharacters": "{count}/9文字",
+  "@passphraseCharacters": {
+    "description": "Passphrase character count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "confirm": "確認",
+  "@confirm": {
+    "description": "Confirm button"
+  },
+
+  "folders": "フォルダ",
+  "@folders": {
+    "description": "Folders section title"
+  },
+  "files": "ファイル",
+  "@files": {
+    "description": "Files section title"
+  },
+  "emptyLibrary": "ライブラリは空です",
+  "@emptyLibrary": {
+    "description": "Empty library message"
+  },
+  "importToStart": "フォルダをインポートして開始",
+  "@importToStart": {
+    "description": "Import prompt"
+  },
+
+  "selectFolder": "フォルダを選択",
+  "@selectFolder": {
+    "description": "Select folder action"
+  },
+  "importing": "インポート中...",
+  "@importing": {
+    "description": "Importing status"
+  },
+  "importComplete": "インポート完了",
+  "@importComplete": {
+    "description": "Import complete message"
+  },
+  "importFailed": "インポート失敗",
+  "@importFailed": {
+    "description": "Import failed message"
+  },
+  "deleteOriginals": "元のファイルを削除しますか?",
+  "@deleteOriginals": {
+    "description": "Delete originals prompt"
+  },
+  "yes": "はい",
+  "@yes": {
+    "description": "Yes option"
+  },
+  "no": "いいえ",
+  "@no": {
+    "description": "No option"
+  },
+  "cancel": "キャンセル",
+  "@cancel": {
+    "description": "Cancel action"
+  },
+
+  "delete": "削除",
+  "@delete": {
+    "description": "Delete action"
+  },
+  "deleteConfirm": "本当に削除しますか?",
+  "@deleteConfirm": {
+    "description": "Delete confirmation"
+  },
+  "deleteWarning": "この操作は取り消せません",
+  "@deleteWarning": {
+    "description": "Delete warning"
+  },
+
+  "export": "エクスポート",
+  "@export": {
+    "description": "Export action"
+  },
+  "exportComplete": "エクスポート完了",
+  "@exportComplete": {
+    "description": "Export complete message"
+  },
+  "exportFailed": "エクスポート失敗",
+  "@exportFailed": {
+    "description": "Export failed message"
+  },
+
+  "sortBy": "並べ替え",
+  "@sortBy": {
+    "description": "Sort by label"
+  },
+  "sortByName": "名前",
+  "@sortByName": {
+    "description": "Sort by name"
+  },
+  "sortByDate": "日付",
+  "@sortByDate": {
+    "description": "Sort by date"
+  },
+  "sortBySize": "サイズ",
+  "@sortBySize": {
+    "description": "Sort by size"
+  },
+  "sortByRating": "評価",
+  "@sortByRating": {
+    "description": "Sort by rating"
+  },
+  "sortByViewCount": "再生回数",
+  "@sortByViewCount": {
+    "description": "Sort by view count"
+  },
+
+  "filterBy": "フィルター",
+  "@filterBy": {
+    "description": "Filter by label"
+  },
+  "filterUnviewed": "未再生のみ",
+  "@filterUnviewed": {
+    "description": "Filter unviewed only"
+  },
+  "filterBookmarked": "ブックマークのみ",
+  "@filterBookmarked": {
+    "description": "Filter bookmarked only"
+  },
+
+  "viewMode": "表示モード",
+  "@viewMode": {
+    "description": "View mode label"
+  },
+  "viewModeVertical": "縦スクロール",
+  "@viewModeVertical": {
+    "description": "Vertical scroll mode"
+  },
+  "viewModeHorizontal": "横スクロール",
+  "@viewModeHorizontal": {
+    "description": "Horizontal scroll mode"
+  },
+  "viewModeSingle": "単ページ",
+  "@viewModeSingle": {
+    "description": "Single page mode"
+  },
+
+  "rotate": "回転",
+  "@rotate": {
+    "description": "Rotate action"
+  },
+
+  "settingsSecurity": "セキュリティ",
+  "@settingsSecurity": {
+    "description": "Security settings section"
+  },
+  "settingsPinLock": "PINロック",
+  "@settingsPinLock": {
+    "description": "PIN lock setting"
+  },
+  "settingsChangePin": "PINを変更",
+  "@settingsChangePin": {
+    "description": "Change PIN setting"
+  },
+
+  "settingsAppearance": "外観",
+  "@settingsAppearance": {
+    "description": "Appearance settings section"
+  },
+  "settingsAppIcon": "アプリアイコン",
+  "@settingsAppIcon": {
+    "description": "App icon setting"
+  },
+
+  "settingsControls": "操作",
+  "@settingsControls": {
+    "description": "Controls settings section"
+  },
+  "settingsHandedness": "片手操作",
+  "@settingsHandedness": {
+    "description": "Handedness setting"
+  },
+  "settingsHandednessLeft": "左手",
+  "@settingsHandednessLeft": {
+    "description": "Left hand option"
+  },
+  "settingsHandednessRight": "右手",
+  "@settingsHandednessRight": {
+    "description": "Right hand option"
+  },
+  "settingsOrientation": "画面の向き",
+  "@settingsOrientation": {
+    "description": "Screen orientation setting"
+  },
+  "settingsOrientationAuto": "自動",
+  "@settingsOrientationAuto": {
+    "description": "Auto orientation"
+  },
+  "settingsOrientationPortrait": "縦向き",
+  "@settingsOrientationPortrait": {
+    "description": "Portrait orientation"
+  },
+  "settingsOrientationLandscape": "横向き",
+  "@settingsOrientationLandscape": {
+    "description": "Landscape orientation"
+  },
+
+  "settingsGeneral": "一般",
+  "@settingsGeneral": {
+    "description": "General settings section"
+  },
+  "settingsLanguage": "言語",
+  "@settingsLanguage": {
+    "description": "Language setting"
+  },
+  "settingsDefaultViewMode": "デフォルト表示モード",
+  "@settingsDefaultViewMode": {
+    "description": "Default view mode setting"
+  },
+  "settingsStartVideosMuted": "動画をミュートで開始",
+  "@settingsStartVideosMuted": {
+    "description": "Start videos muted setting"
+  },
+
+  "settingsPanicMode": "パニックモード",
+  "@settingsPanicMode": {
+    "description": "Panic mode settings section"
+  },
+  "settingsPanicModeEnabled": "パニックモードを有効化",
+  "@settingsPanicModeEnabled": {
+    "description": "Enable panic mode setting"
+  },
+  "settingsShakeSensitivity": "シェイク感度",
+  "@settingsShakeSensitivity": {
+    "description": "Shake sensitivity setting"
+  },
+  "settingsFakeScreen": "偽装画面",
+  "@settingsFakeScreen": {
+    "description": "Fake screen setting"
+  },
+  "settingsFakeScreenCalculator": "電卓",
+  "@settingsFakeScreenCalculator": {
+    "description": "Calculator fake screen"
+  },
+  "settingsFakeScreenNotes": "メモ",
+  "@settingsFakeScreenNotes": {
+    "description": "Notes fake screen"
+  },
+  "settingsFakeScreenWeather": "天気",
+  "@settingsFakeScreenWeather": {
+    "description": "Weather fake screen"
+  },
+
+  "settingsAbout": "このアプリについて",
+  "@settingsAbout": {
+    "description": "About settings section"
+  },
+  "settingsVersion": "バージョン",
+  "@settingsVersion": {
+    "description": "Version label"
+  },
+  "settingsLicenses": "ライセンス",
+  "@settingsLicenses": {
+    "description": "Licenses setting"
+  },
+
+  "fileCount": "{count}件",
+  "@fileCount": {
+    "description": "File count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pageIndicator": "{current}/{total}",
+  "@pageIndicator": {
+    "description": "Page indicator",
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  }
+}

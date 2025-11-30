@@ -1,0 +1,98 @@
+{
+  "@@locale": "en",
+  "appName": "Selona",
+  "tagline": "Your private serenity space",
+
+  "library": "Library",
+  "settings": "Settings",
+  "import": "Import",
+
+  "enterPin": "Enter your PIN",
+  "incorrectPin": "Incorrect PIN",
+  "pinSetup": "Set up PIN",
+  "confirmPin": "Confirm PIN",
+  "pinMismatch": "PINs do not match",
+
+  "passphraseSetup": "Set up passphrase",
+  "passphraseDescription": "Enter a 9-character passphrase",
+  "passphraseHint": "Example: a3f7b2c1e",
+  "passphraseWarning": "Warning: Cannot be recovered if forgotten",
+  "passphraseCharacters": "{count}/9 characters",
+  "confirm": "Confirm",
+
+  "folders": "Folders",
+  "files": "Files",
+  "emptyLibrary": "Library is empty",
+  "importToStart": "Import a folder to get started",
+
+  "selectFolder": "Select folder",
+  "importing": "Importing...",
+  "importComplete": "Import complete",
+  "importFailed": "Import failed",
+  "deleteOriginals": "Delete original files?",
+  "yes": "Yes",
+  "no": "No",
+  "cancel": "Cancel",
+
+  "delete": "Delete",
+  "deleteConfirm": "Are you sure you want to delete?",
+  "deleteWarning": "This action cannot be undone",
+
+  "export": "Export",
+  "exportComplete": "Export complete",
+  "exportFailed": "Export failed",
+
+  "sortBy": "Sort by",
+  "sortByName": "Name",
+  "sortByDate": "Date",
+  "sortBySize": "Size",
+  "sortByRating": "Rating",
+  "sortByViewCount": "View count",
+
+  "filterBy": "Filter",
+  "filterUnviewed": "Unviewed only",
+  "filterBookmarked": "Bookmarked only",
+
+  "viewMode": "View mode",
+  "viewModeVertical": "Vertical scroll",
+  "viewModeHorizontal": "Horizontal scroll",
+  "viewModeSingle": "Single page",
+
+  "rotate": "Rotate",
+
+  "settingsSecurity": "Security",
+  "settingsPinLock": "PIN Lock",
+  "settingsChangePin": "Change PIN",
+
+  "settingsAppearance": "Appearance",
+  "settingsAppIcon": "App Icon",
+
+  "settingsControls": "Controls",
+  "settingsHandedness": "One-handed mode",
+  "settingsHandednessLeft": "Left hand",
+  "settingsHandednessRight": "Right hand",
+  "settingsOrientation": "Screen orientation",
+  "settingsOrientationAuto": "Auto",
+  "settingsOrientationPortrait": "Portrait",
+  "settingsOrientationLandscape": "Landscape",
+
+  "settingsGeneral": "General",
+  "settingsLanguage": "Language",
+  "settingsDefaultViewMode": "Default view mode",
+  "settingsStartVideosMuted": "Start videos muted",
+
+  "settingsPanicMode": "Panic Mode",
+  "settingsPanicModeEnabled": "Enable panic mode",
+  "settingsShakeSensitivity": "Shake sensitivity",
+  "settingsFakeScreen": "Fake screen",
+  "settingsFakeScreenCalculator": "Calculator",
+  "settingsFakeScreenNotes": "Notes",
+  "settingsFakeScreenWeather": "Weather",
+
+  "settingsAbout": "About",
+  "settingsVersion": "Version",
+  "settingsLicenses": "Licenses",
+
+  "fileCount": "{count} items",
+  "pageIndicator": "{current}/{total}"
+}
