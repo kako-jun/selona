@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,8 +18,15 @@ void main() async {
     DeviceOrientation.landscapeRight,
   ]);
 
-  // Enable wake lock to prevent screen sleep
-  await WakelockPlus.enable();
+  // Enable wake lock to prevent screen sleep (skip on Linux desktop if not supported)
+  try {
+    if (!Platform.isLinux) {
+      await WakelockPlus.enable();
+    }
+  } catch (e) {
+    // Ignore wakelock errors on platforms where it's not supported
+    debugPrint('Wakelock not available: $e');
+  }
 
   // Set system UI overlay style for dark theme
   SystemChrome.setSystemUIOverlayStyle(
