@@ -6,11 +6,13 @@ import '../../../../shared/models/media_file.dart';
 import '../../../../shared/models/app_settings.dart';
 
 /// Bottom control bar for the viewer
+/// Supports one-handed mode with left/right control positioning
 class ViewerControls extends StatelessWidget {
   final MediaFile file;
   final int currentIndex;
   final int totalFiles;
   final ImageViewMode viewMode;
+  final Handedness handedness;
   final void Function(ImageViewMode mode)? onViewModeChanged;
   final VoidCallback? onRotate;
   final void Function(int rating)? onRatingChanged;
@@ -23,6 +25,7 @@ class ViewerControls extends StatelessWidget {
     required this.currentIndex,
     required this.totalFiles,
     required this.viewMode,
+    this.handedness = Handedness.right,
     this.onViewModeChanged,
     this.onRotate,
     this.onRatingChanged,
@@ -33,6 +36,62 @@ class ViewerControls extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final isLeftHanded = handedness == Handedness.left;
+
+    // Build navigation buttons
+    final prevButton = IconButton(
+      icon: Icon(
+        Icons.chevron_left,
+        color: onPrevious != null ? Colors.white : Colors.white38,
+      ),
+      onPressed: onPrevious,
+    );
+
+    final nextButton = IconButton(
+      icon: Icon(
+        Icons.chevron_right,
+        color: onNext != null ? Colors.white : Colors.white38,
+      ),
+      onPressed: onNext,
+    );
+
+    // Build center controls
+    final centerControls = <Widget>[
+      // View mode buttons (for images only)
+      if (file.isImage && onViewModeChanged != null) ...[
+        _ViewModeButton(
+          icon: Icons.view_day,
+          label: l10n.viewModeVertical,
+          isSelected: viewMode == ImageViewMode.vertical,
+          onTap: () => onViewModeChanged!(ImageViewMode.vertical),
+        ),
+        _ViewModeButton(
+          icon: Icons.view_carousel,
+          label: l10n.viewModeHorizontal,
+          isSelected: viewMode == ImageViewMode.horizontal,
+          onTap: () => onViewModeChanged!(ImageViewMode.horizontal),
+        ),
+        _ViewModeButton(
+          icon: Icons.crop_square,
+          label: l10n.viewModeSingle,
+          isSelected: viewMode == ImageViewMode.single,
+          onTap: () => onViewModeChanged!(ImageViewMode.single),
+        ),
+      ],
+
+      // Rotate button
+      IconButton(
+        icon: const Icon(Icons.rotate_right, color: Colors.white),
+        onPressed: onRotate,
+        tooltip: l10n.rotate,
+      ),
+
+      // Rating stars
+      _RatingWidget(
+        rating: file.rating,
+        onChanged: onRatingChanged,
+      ),
+    ];
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -49,63 +108,24 @@ class ViewerControls extends StatelessWidget {
           ),
           const SizedBox(height: 12),
 
-          // Main controls row
+          // Main controls row - order based on handedness
+          // Left-handed: main controls on LEFT side (prev/next far left)
+          // Right-handed: main controls on RIGHT side (prev/next far right)
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              // Previous
-              IconButton(
-                icon: Icon(
-                  Icons.chevron_left,
-                  color: onPrevious != null ? Colors.white : Colors.white38,
-                ),
-                onPressed: onPrevious,
-              ),
-
-              // View mode buttons (for images only)
-              if (file.isImage && onViewModeChanged != null) ...[
-                _ViewModeButton(
-                  icon: Icons.view_day,
-                  label: l10n.viewModeVertical,
-                  isSelected: viewMode == ImageViewMode.vertical,
-                  onTap: () => onViewModeChanged!(ImageViewMode.vertical),
-                ),
-                _ViewModeButton(
-                  icon: Icons.view_carousel,
-                  label: l10n.viewModeHorizontal,
-                  isSelected: viewMode == ImageViewMode.horizontal,
-                  onTap: () => onViewModeChanged!(ImageViewMode.horizontal),
-                ),
-                _ViewModeButton(
-                  icon: Icons.crop_square,
-                  label: l10n.viewModeSingle,
-                  isSelected: viewMode == ImageViewMode.single,
-                  onTap: () => onViewModeChanged!(ImageViewMode.single),
-                ),
-              ],
-
-              // Rotate button
-              IconButton(
-                icon: const Icon(Icons.rotate_right, color: Colors.white),
-                onPressed: onRotate,
-                tooltip: l10n.rotate,
-              ),
-
-              // Rating stars
-              _RatingWidget(
-                rating: file.rating,
-                onChanged: onRatingChanged,
-              ),
-
-              // Next
-              IconButton(
-                icon: Icon(
-                  Icons.chevron_right,
-                  color: onNext != null ? Colors.white : Colors.white38,
-                ),
-                onPressed: onNext,
-              ),
-            ],
+            children: isLeftHanded
+                ? [
+                    // Left-handed: navigation on left, then controls
+                    prevButton,
+                    nextButton,
+                    ...centerControls,
+                  ]
+                : [
+                    // Right-handed: controls first, navigation on right
+                    ...centerControls,
+                    prevButton,
+                    nextButton,
+                  ],
           ),
         ],
       ),
