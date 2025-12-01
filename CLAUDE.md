@@ -13,10 +13,10 @@
 
 - **Framework**: Flutter (Dart)
 - **Platforms**: iOS, Android, Windows, macOS, Linux (all simultaneously)
-- **Rust Integration**: flutter_rust_bridge
-- **Encryption**: pink-072 crate (external Rust library)
-- **State Management**: TBD (Riverpod recommended)
-- **Local Storage**: SQLite or Hive for metadata
+- **Rust Integration**: flutter_rust_bridge v2.6
+- **Encryption**: pink072 crate v1.1 (external Rust library)
+- **State Management**: Riverpod
+- **Local Storage**: SQLite (encrypted as .pnk)
 
 ## Architecture
 
@@ -24,28 +24,61 @@
 selona/
 ├── lib/
 │   ├── main.dart
-│   ├── app/                 # App-level configuration
-│   ├── core/                # Core utilities, constants
+│   ├── app/                 # App-level configuration (theme, routes)
+│   ├── core/                # Core utilities, constants, services
+│   │   ├── constants/       # Storage paths, app constants
+│   │   ├── database/        # SQLite database, repositories
+│   │   ├── errors/          # Custom exceptions
+│   │   └── services/        # CryptoService, ImportService, ThumbnailService, PanicService
 │   ├── features/            # Feature modules
-│   │   ├── auth/            # PIN lock
+│   │   ├── auth/            # PIN lock, passphrase setup
+│   │   ├── panic/           # Fake screens (calculator, notes, weather)
 │   │   ├── viewer/          # Image/video viewer
-│   │   ├── library/         # File management
+│   │   ├── library/         # File management, import
 │   │   └── settings/        # App settings
 │   ├── l10n/                # Localization (ja, en)
-│   └── shared/              # Shared widgets, models
+│   └── shared/              # Shared widgets, models, utils
+│       ├── models/          # MediaFile, Folder, AppSettings, etc.
+│       ├── utils/           # ResponsiveGrid, OrientationHelper
+│       └── widgets/         # Common widgets
 ├── rust/                    # Rust code for flutter_rust_bridge
+│   ├── Cargo.toml           # Dependencies: pink072, flutter_rust_bridge
 │   └── src/
-│       └── lib.rs           # pink-072 integration
+│       └── api/
+│           └── crypto.rs    # pink072 integration
+├── windows/                 # Windows platform files
+├── macos/                   # macOS platform files
+├── linux/                   # Linux platform files
+├── android/                 # Android platform files
+├── ios/                     # iOS platform files
 ├── docs/                    # Specifications
 ├── test/                    # Tests
 └── assets/                  # Icons, fonts
 ```
 
+## Storage Architecture
+
+### File Storage
+- **1 file = 1 UUID.pnk** (flat storage in `vault/` directory)
+- **Folder structure**: Managed in SQLite database, not filesystem
+- **File names**: UUIDs only (original names stored in DB)
+- **Thumbnails**: Stored as `vault/thumbs/{uuid}.pnk`
+
+### Database Protection
+- SQLite database encrypted as `selona.pnk`
+- On startup: decode selona.pnk → temp DB → use
+- On exit: encode temp DB → selona.pnk → delete temp
+
+### Temporary Files
+- Decoded files go to temp directory for viewing
+- Automatically cleaned up after viewing
+- Never persisted in decrypted form
+
 ## Key Features
 
 ### Core Features
-1. **Local File Viewing**: Images (JPG, PNG, GIF, WebP) and Videos (MP4, WebM, MKV)
-2. **Folder Import**: Import entire folders, encrypted with pink-072
+1. **Local File Viewing**: Images (JPG, PNG, GIF, WebP, BMP) and Videos (MP4, WebM, MKV, AVI, MOV, M4V)
+2. **Folder Import**: Import entire folders, preserving structure in DB, encrypted with pink072
 3. **Export**: Decrypt and save individual files to device
 4. **Delete**: Individual file/folder deletion only (no bulk)
 5. **Sort/Filter**: By name, date, size, rating, play count; filter by unviewed/bookmarked
@@ -55,13 +88,13 @@ selona/
 9. **Post-Import Cleanup**: Option to delete original files after import
 10. **Offline-first**: No network dependency, fully local
 11. **Wake Lock**: Screen stays on while app is active (prevents auto-sleep)
-12. **One-Handed Mode**: Controls grouped left or right for single-hand operation
-13. **Orientation Lock**: Override OS rotation (portrait/landscape/auto)
+12. **One-Handed Mode**: Controls positioned left or right based on handedness setting
+13. **Orientation Lock**: Override OS rotation (auto/portrait-only/landscape-only)
 14. **Bookmarks**: Mark favorite files and video scenes
 15. **Rating**: 1-5 star rating per file
 16. **Playlists**: Create custom ordered collections with auto-advance
 17. **Random Mode**: Shuffle browsing within or across folders
-18. **Panic Mode**: Shake to instantly hide (fake calculator/notes/weather screen)
+18. **Panic Mode**: Shake to instantly show fake screen (calculator/notes/weather)
 19. **Quick Mute**: One-tap mute button always visible on video player
 
 **Not Supported** (intentionally simple):
@@ -81,31 +114,60 @@ A single viewer component that automatically detects file type:
 
 ### Security Features
 - **Passphrase**: User sets 9-character passphrase on first launch (e.g., "a3f7b2c1e")
-  - Exactly 9 characters (8 bytes × 9 = 72 bits → pink-072)
+  - Exactly 9 characters → maps to pink072's 9-byte seed
   - Looks like revision ID / commit hash
   - Cannot be changed after initial setup
   - Required for import and viewing
   - No recovery if forgotten
 - **App Sandbox Only**: No access to device-wide file system
-- **Encrypted Storage**: All files (including thumbnails) encrypted with pink-072
-- **Real-time Decryption**: Files decrypted to memory only, never stored decrypted on disk
+- **Encrypted Storage**: All files (including thumbnails and DB) encrypted with pink072
+- **Temporary Decryption**: Files decrypted to temp file for viewing, then deleted
 - **No Cloud Sync**: All data stays local
 
+### Panic Mode Details
+- **Trigger**: Shake detection (configurable sensitivity: gentle/normal/hard)
+- **Fake Screens**:
+  - Calculator (functional, AC long-press to exit)
+  - Notes (triple-tap title to exit)
+  - Weather (long-press temperature to exit)
+
 ### UI/UX
-- **Theme**: Dark mode only
+- **Theme**: Dark mode only (no light mode)
 - **Icon Disguise**: Alternative app icons available
 - **Languages**: Japanese + English (i18n ready)
+- **Responsive Grid**: Adapts column count based on screen width
+- **Minimum Window Size**: 400x600 (desktop platforms)
+
+## Platform-Specific Notes
+
+### Build Requirements
+| Platform | Requirements | Build Machine |
+|----------|-------------|---------------|
+| Android | Android Studio + SDK | Windows/Mac/Linux |
+| iOS | Xcode | Mac only |
+| Windows | Visual Studio | Windows only |
+| macOS | Xcode | Mac only |
+| Linux | GCC + GTK | Linux only |
+
+### Distribution
+- **Windows**: ZIP distribution (folder with exe + DLLs)
+- **macOS**: DMG or ZIP
+- **Linux**: tar.gz or AppImage
+- **Android**: APK or Google Play
+- **iOS**: TestFlight or App Store
+
+### Video Thumbnails
+- Uses `fc_native_video_thumbnail` package
+- Supported: Android, iOS, Windows, macOS
+- Linux: Falls back to generic video icon (not supported)
 
 ## Development Commands
 
 ```bash
-# Create Flutter project
-flutter create --org com.selona selona_app
-
 # Run on specific platform
+flutter run -d linux
 flutter run -d windows
 flutter run -d macos
-flutter run -d linux
 flutter run -d chrome  # for web testing
 flutter run             # auto-select device
 
@@ -115,6 +177,9 @@ flutter build ios
 flutter build windows
 flutter build macos
 flutter build linux
+
+# Analyze
+flutter analyze
 
 # Generate l10n
 flutter gen-l10n
@@ -140,8 +205,9 @@ flutter_rust_bridge_codegen generate
 ## Important Notes
 
 1. **Copyright**: This app does NOT download or distribute content. It only views locally imported files.
-2. **Privacy**: No analytics, no tracking, no network calls (except for future updates check if implemented)
-3. **Encryption Crate**: pink-072 is an external dependency - ensure it's properly integrated via flutter_rust_bridge
+2. **Privacy**: No analytics, no tracking, no network calls
+3. **Encryption**: pink072 crate handles all encryption via flutter_rust_bridge
+4. **Memory Management**: Large files (videos) use temp file approach, not memory loading
 
 ## Related Documentation
 
