@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../app/theme.dart';
 import '../../../shared/models/app_settings.dart';
+import '../../../shared/utils/orientation_helper.dart';
 
 /// Settings screen
 class SettingsScreen extends ConsumerStatefulWidget {
@@ -18,6 +19,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   AppSettings _settings = const AppSettings();
 
   void _updateSettings(AppSettings newSettings) {
+    // Apply orientation if changed
+    if (newSettings.orientationLock != _settings.orientationLock) {
+      OrientationHelper.applyOrientation(newSettings.orientationLock);
+    }
+
     setState(() {
       _settings = newSettings;
     });

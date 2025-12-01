@@ -6,17 +6,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 import 'app/app.dart';
+import 'shared/utils/orientation_helper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Set preferred orientations (can be overridden by user settings)
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-    DeviceOrientation.landscapeLeft,
-    DeviceOrientation.landscapeRight,
-  ]);
+  // Set default orientation (all directions allowed)
+  // TODO: Load saved orientation setting from database and apply here
+  // Example: final settings = await SettingsRepository.load();
+  //          await OrientationHelper.applyOrientation(settings.orientationLock);
+  await OrientationHelper.resetToDefault();
 
   // Enable wake lock to prevent screen sleep (skip on Linux desktop if not supported)
   try {
