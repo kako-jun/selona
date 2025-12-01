@@ -5,7 +5,8 @@ import 'package:shake/shake.dart';
 
 import '../../shared/models/app_settings.dart';
 
-/// Service for handling panic mode (shake to hide)
+/// Service for handling panic mode (shake to hide + mute)
+/// When triggered, both shows fake screen AND mutes any playing media
 class PanicService {
   PanicService._();
   static final instance = PanicService._();
@@ -14,16 +15,21 @@ class PanicService {
   bool _isEnabled = false;
   ShakeSensitivity _sensitivity = ShakeSensitivity.normal;
   VoidCallback? _onPanicTriggered;
+  VoidCallback? _onMuteTriggered;
 
   /// Initialize the panic service
+  /// [onPanicTriggered] - Called to show fake screen
+  /// [onMuteTriggered] - Called to mute any playing media
   void initialize({
     required bool enabled,
     required ShakeSensitivity sensitivity,
     required VoidCallback onPanicTriggered,
+    VoidCallback? onMuteTriggered,
   }) {
     _isEnabled = enabled;
     _sensitivity = sensitivity;
     _onPanicTriggered = onPanicTriggered;
+    _onMuteTriggered = onMuteTriggered;
 
     if (_isEnabled) {
       _startListening();
@@ -56,8 +62,11 @@ class PanicService {
 
     _shakeDetector = ShakeDetector.autoStart(
       onPhoneShake: () {
-        if (_isEnabled && _onPanicTriggered != null) {
-          _onPanicTriggered!();
+        if (_isEnabled) {
+          // Mute first (instant, before screen transition)
+          _onMuteTriggered?.call();
+          // Then show fake screen
+          _onPanicTriggered?.call();
         }
       },
       minimumShakeCount: _getShakeCount(),

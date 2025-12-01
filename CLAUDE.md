@@ -94,8 +94,7 @@ selona/
 15. **Rating**: 1-5 star rating per file
 16. **Playlists**: Create custom ordered collections with auto-advance
 17. **Random Mode**: Shuffle browsing within or across folders
-18. **Panic Mode**: Shake to instantly show fake screen (calculator/notes/weather)
-19. **Quick Mute**: One-tap mute button always visible on video player
+18. **Panic Mode**: Shake to instantly show fake screen + mute audio (calculator/notes/weather)
 
 **Not Supported** (intentionally simple):
 - Folder reorganization / file moving
@@ -126,6 +125,7 @@ A single viewer component that automatically detects file type:
 
 ### Panic Mode Details
 - **Trigger**: Shake detection (configurable sensitivity: gentle/normal/hard)
+- **Actions**: Instantly mute audio + show fake screen
 - **Fake Screens**:
   - Calculator (functional, AC long-press to exit)
   - Notes (triple-tap title to exit)
