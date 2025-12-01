@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../../../../app/theme.dart';
 import '../../../../shared/models/folder.dart';
+import '../../../../shared/utils/responsive_grid.dart';
 
 /// Grid view for displaying folders
+/// Automatically adjusts column count based on screen width
 class FolderGrid extends StatelessWidget {
   final List<Folder> folders;
   final void Function(Folder folder) onFolderTap;
@@ -19,12 +21,7 @@ class FolderGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverGrid(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        mainAxisSpacing: 8,
-        crossAxisSpacing: 8,
-        childAspectRatio: 1.5,
-      ),
+      gridDelegate: ResponsiveGrid.getFolderGridDelegate(context),
       delegate: SliverChildBuilderDelegate(
         (context, index) {
           final folder = folders[index];
