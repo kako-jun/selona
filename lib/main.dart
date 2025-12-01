@@ -6,10 +6,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 import 'app/app.dart';
+import 'core/ffi/frb_generated.dart';
 import 'shared/utils/orientation_helper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Rust library for pink072 encryption
+  await RustLib.init();
 
   // Set default orientation (all directions allowed)
   // TODO: Load saved orientation setting from database and apply here

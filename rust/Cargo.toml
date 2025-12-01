@@ -8,7 +8,7 @@ license = "GPL-3.0-or-later"
 crate-type = ["cdylib", "staticlib"]
 
 [dependencies]
-flutter_rust_bridge = "2.6"
+flutter_rust_bridge = "=2.11.1"
 pink072 = "1.1"
 
 # For PIN/passphrase hashing

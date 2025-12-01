@@ -11,13 +11,17 @@ import '../../../../shared/models/media_file.dart';
 class VideoPlayerWidget extends StatefulWidget {
   final MediaFile file;
   final bool showControls;
+  final bool isSlideshow;
   final void Function(Duration position)? onPositionChanged;
+  final VoidCallback? onVideoEnded;
 
   const VideoPlayerWidget({
     super.key,
     required this.file,
     this.showControls = true,
+    this.isSlideshow = false,
     this.onPositionChanged,
+    this.onVideoEnded,
   });
 
   @override
@@ -30,6 +34,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   bool _isMuted = false;
   double _playbackSpeed = 1.0;
   Duration? _lastSavedPosition;
+  bool _hasNotifiedEnd = false;
 
   @override
   void initState() {
@@ -41,6 +46,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   void dispose() {
     // Save position before disposing
     _saveCurrentPosition();
+    _controller?.removeListener(_onVideoProgress);
     _controller?.dispose();
     super.dispose();
   }
@@ -79,6 +85,31 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     //     widget.file.lastPlaybackPosition!.inSeconds > 0) {
     //   await _controller?.seekTo(widget.file.lastPlaybackPosition!);
     // }
+
+    // Add listener for video end detection (for slideshow)
+    _controller?.addListener(_onVideoProgress);
+  }
+
+  /// Check if video has ended (for slideshow auto-advance)
+  void _onVideoProgress() {
+    if (_controller == null || !_isInitialized) return;
+
+    final position = _controller!.value.position;
+    final duration = _controller!.value.duration;
+
+    // Check if video has ended (within 500ms of end)
+    if (!_hasNotifiedEnd &&
+        duration.inMilliseconds > 0 &&
+        position.inMilliseconds >= duration.inMilliseconds - 500 &&
+        !_controller!.value.isPlaying) {
+      _hasNotifiedEnd = true;
+      widget.onVideoEnded?.call();
+    }
+
+    // Reset flag if we're not at the end (e.g., user seeked back)
+    if (position.inMilliseconds < duration.inMilliseconds - 1000) {
+      _hasNotifiedEnd = false;
+    }
   }
 
   /// Seek to saved position (call after video is initialized)

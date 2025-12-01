@@ -3,6 +3,7 @@
 //! This module provides the encryption layer for Selona using pink072.
 //! Files are encoded as .pnk (pink PNG) format with a 9-byte seed.
 
+use flutter_rust_bridge::frb;
 use pink072::{decode_file, encode_file, decode_auto};
 use sha2::{Sha256, Digest};
 use std::path::Path;
@@ -18,6 +19,7 @@ use std::fs;
 /// # Returns
 /// * `Ok(())` on success
 /// * `Err(String)` on failure
+#[frb(sync)]
 pub fn encode_to_pnk(input_path: String, output_path: String, passphrase: String) -> Result<(), String> {
     let seed = passphrase_to_seed(&passphrase)?;
 
@@ -37,6 +39,7 @@ pub fn encode_to_pnk(input_path: String, output_path: String, passphrase: String
 /// # Returns
 /// * `Ok(String)` - The filename of the extracted file
 /// * `Err(String)` on failure
+#[frb(sync)]
 pub fn decode_from_pnk(input_path: String, output_dir: String) -> Result<String, String> {
     decode_file(
         Path::new(&input_path),
@@ -53,6 +56,7 @@ pub fn decode_from_pnk(input_path: String, output_dir: String) -> Result<String,
 /// # Returns
 /// * `Ok(Vec<String>)` - List of extracted filenames
 /// * `Err(String)` on failure
+#[frb(sync)]
 pub fn decode_from_pnk_auto(input_path: String, output_dir: String) -> Result<Vec<String>, String> {
     decode_auto(
         Path::new(&input_path),
@@ -68,6 +72,7 @@ pub fn decode_from_pnk_auto(input_path: String, output_dir: String) -> Result<Ve
 /// # Returns
 /// * `Ok(())` on success
 /// * `Err(String)` on failure
+#[frb(sync)]
 pub fn delete_temp_file(path: String) -> Result<(), String> {
     fs::remove_file(Path::new(&path))
         .map_err(|e| format!("Failed to delete temp file: {}", e))
@@ -81,6 +86,7 @@ pub fn delete_temp_file(path: String) -> Result<(), String> {
 /// # Returns
 /// * `Ok(())` on success
 /// * `Err(String)` on failure
+#[frb(sync)]
 pub fn delete_temp_dir(path: String) -> Result<(), String> {
     fs::remove_dir_all(Path::new(&path))
         .map_err(|e| format!("Failed to delete temp directory: {}", e))
@@ -105,6 +111,7 @@ fn passphrase_to_seed(passphrase: &str) -> Result<[u8; 9], String> {
 ///
 /// # Returns
 /// * The hashed passphrase as a hex string
+#[frb(sync)]
 pub fn hash_passphrase(passphrase: String) -> String {
     let mut hasher = Sha256::new();
     hasher.update(passphrase.as_bytes());
@@ -120,6 +127,7 @@ pub fn hash_passphrase(passphrase: String) -> String {
 ///
 /// # Returns
 /// * `true` if the passphrase matches, `false` otherwise
+#[frb(sync)]
 pub fn verify_passphrase(passphrase: String, hash: String) -> bool {
     let computed_hash = hash_passphrase(passphrase);
     computed_hash == hash
@@ -132,6 +140,7 @@ pub fn verify_passphrase(passphrase: String, hash: String) -> bool {
 ///
 /// # Returns
 /// * The hashed PIN as a hex string
+#[frb(sync)]
 pub fn hash_pin(pin: String) -> String {
     // Use a different prefix to distinguish from passphrase hashes
     let salted = format!("selona_pin_{}", pin);
@@ -151,9 +160,43 @@ pub fn hash_pin(pin: String) -> String {
 ///
 /// # Returns
 /// * `true` if the PIN matches, `false` otherwise
+#[frb(sync)]
 pub fn verify_pin(pin: String, hash: String) -> bool {
     let computed_hash = hash_pin(pin);
     computed_hash == hash
+}
+
+/// Decodes a .pnk file and returns its contents as bytes
+/// Useful for thumbnails and small files that fit in memory
+///
+/// # Arguments
+/// * `input_path` - Path to the .pnk file
+///
+/// # Returns
+/// * `Ok(Vec<u8>)` - The decoded file contents
+/// * `Err(String)` on failure
+#[frb(sync)]
+pub fn decode_to_bytes(input_path: String) -> Result<Vec<u8>, String> {
+    // Create a temporary directory for decoding
+    let temp_dir = std::env::temp_dir().join(format!("selona_decode_{}", std::process::id()));
+    fs::create_dir_all(&temp_dir)
+        .map_err(|e| format!("Failed to create temp dir: {}", e))?;
+
+    // Decode to temp directory
+    let filename = decode_file(
+        Path::new(&input_path),
+        &temp_dir,
+    ).map_err(|e| format!("Decode failed: {}", e))?;
+
+    // Read the decoded file
+    let decoded_path = temp_dir.join(&filename);
+    let data = fs::read(&decoded_path)
+        .map_err(|e| format!("Failed to read decoded file: {}", e))?;
+
+    // Cleanup
+    let _ = fs::remove_dir_all(&temp_dir);
+
+    Ok(data)
 }
 
 // Hex encoding support

@@ -97,6 +97,47 @@ enum FakeScreenType {
   }
 }
 
+/// Auto-exit timeout for idle detection (寝落ち対策)
+enum IdleTimeout {
+  disabled,
+  minutes5,
+  minutes15,
+  minutes30,
+  hour1;
+
+  int? get minutes {
+    switch (this) {
+      case IdleTimeout.disabled:
+        return null;
+      case IdleTimeout.minutes5:
+        return 5;
+      case IdleTimeout.minutes15:
+        return 15;
+      case IdleTimeout.minutes30:
+        return 30;
+      case IdleTimeout.hour1:
+        return 60;
+    }
+  }
+
+  static IdleTimeout fromString(String value) {
+    switch (value) {
+      case 'disabled':
+        return IdleTimeout.disabled;
+      case 'minutes5':
+        return IdleTimeout.minutes5;
+      case 'minutes15':
+        return IdleTimeout.minutes15;
+      case 'minutes30':
+        return IdleTimeout.minutes30;
+      case 'hour1':
+        return IdleTimeout.hour1;
+      default:
+        return IdleTimeout.minutes15;
+    }
+  }
+}
+
 /// Application settings
 class AppSettings extends Equatable {
   // Encryption (immutable after first launch)
@@ -123,6 +164,14 @@ class AppSettings extends Equatable {
 
   // History settings
   final int historyLimit;
+
+  // Privacy protection (寝落ち対策)
+  final IdleTimeout idleTimeout;
+  final bool secureScreen; // FLAG_SECURE - prevent screenshots/screen recording
+
+  // Remote hash check for revenge porn prevention
+  final bool remoteHashCheckEnabled;
+  final String? remoteHashServerUrl;
 
   const AppSettings({
     this.passphraseHash,
