@@ -79,3 +79,4 @@ credentials.json
 # Test coverage
 coverage/
 .claude/settings.local.json
+.serena/
