@@ -4,6 +4,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../app/routes.dart';
 import '../../../app/theme.dart';
+import '../../../core/database/folder_repository.dart';
+import '../../../core/database/media_file_repository.dart';
 import '../../../shared/models/folder.dart';
 import '../../../shared/models/media_file.dart';
 import 'widgets/folder_grid.dart';
@@ -13,10 +15,12 @@ import 'widgets/sort_filter_sheet.dart';
 /// Library screen - main browsing interface
 class LibraryScreen extends ConsumerStatefulWidget {
   final String? folderId;
+  final String? folderName;
 
   const LibraryScreen({
     super.key,
     this.folderId,
+    this.folderName,
   });
 
   @override
@@ -24,11 +28,13 @@ class LibraryScreen extends ConsumerStatefulWidget {
 }
 
 class _LibraryScreenState extends ConsumerState<LibraryScreen> {
+  final _folderRepo = FolderRepository.instance;
+  final _fileRepo = MediaFileRepository.instance;
+
   SortOption _sortOption = SortOption.name;
   bool _sortAscending = true;
   FilterOption? _filterOption;
 
-  // Demo data - will be replaced with actual data from database
   List<Folder> _folders = [];
   List<MediaFile> _files = [];
   bool _isLoading = true;
@@ -40,79 +46,68 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> {
   }
 
   Future<void> _loadData() async {
-    // TODO: Load from actual database
-    await Future.delayed(const Duration(milliseconds: 300));
-
     setState(() {
-      // Demo folders
+      _isLoading = true;
+    });
+
+    try {
+      // Load folders
       if (widget.folderId == null) {
-        _folders = [
-          Folder(
-            id: '1',
-            name: 'Photos 2024',
-            createdAt: DateTime.now().subtract(const Duration(days: 30)),
-            updatedAt: DateTime.now().subtract(const Duration(days: 1)),
-          ),
-          Folder(
-            id: '2',
-            name: 'Videos',
-            createdAt: DateTime.now().subtract(const Duration(days: 60)),
-            updatedAt: DateTime.now().subtract(const Duration(days: 7)),
-          ),
-          Folder(
-            id: '3',
-            name: 'Screenshots',
-            createdAt: DateTime.now().subtract(const Duration(days: 90)),
-            updatedAt: DateTime.now().subtract(const Duration(days: 14)),
-          ),
-        ];
+        // Root level - show all root folders
+        final folders = await _folderRepo.getRootFolders();
+
+        // Enrich folders with file count and preview IDs
+        final enrichedFolders = <Folder>[];
+        for (final folder in folders) {
+          final fileCount = await _fileRepo.getCountInFolder(folder.id);
+          final files = await _fileRepo.getByFolder(folder.id);
+          final previewIds = files.take(4).map((f) => f.id).toList();
+
+          enrichedFolders.add(folder.copyWith(
+            fileCount: fileCount,
+            previewFileIds: previewIds,
+          ));
+        }
+        _folders = enrichedFolders;
       } else {
-        _folders = [];
+        // Inside a folder - show child folders
+        final folders = await _folderRepo.getChildFolders(widget.folderId!);
+
+        final enrichedFolders = <Folder>[];
+        for (final folder in folders) {
+          final fileCount = await _fileRepo.getCountInFolder(folder.id);
+          final files = await _fileRepo.getByFolder(folder.id);
+          final previewIds = files.take(4).map((f) => f.id).toList();
+
+          enrichedFolders.add(folder.copyWith(
+            fileCount: fileCount,
+            previewFileIds: previewIds,
+          ));
+        }
+        _folders = enrichedFolders;
       }
 
-      // Demo files
-      _files = [
-        MediaFile(
-          id: 'f1',
-          name: 'image001.jpg',
-          folderId: widget.folderId ?? 'root',
-          type: MediaType.image,
-          encryptedPath: '/encrypted/f1.enc',
-          fileSize: 2048000,
-          importedAt: DateTime.now().subtract(const Duration(days: 5)),
-        ),
-        MediaFile(
-          id: 'f2',
-          name: 'video001.mp4',
-          folderId: widget.folderId ?? 'root',
-          type: MediaType.video,
-          encryptedPath: '/encrypted/f2.enc',
-          fileSize: 10240000,
-          importedAt: DateTime.now().subtract(const Duration(days: 3)),
-          lastViewedAt: DateTime.now().subtract(const Duration(days: 1)),
-        ),
-        MediaFile(
-          id: 'f3',
-          name: 'image002.png',
-          folderId: widget.folderId ?? 'root',
-          type: MediaType.image,
-          encryptedPath: '/encrypted/f3.enc',
-          fileSize: 1024000,
-          importedAt: DateTime.now().subtract(const Duration(days: 1)),
-          isBookmarked: true,
-          rating: 4,
-        ),
-      ];
+      // Load files in current folder
+      _files = await _fileRepo.getByFolder(widget.folderId);
+    } catch (e) {
+      debugPrint('Failed to load library data: $e');
+    }
 
-      _isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   void _onFolderTap(Folder folder) {
     Navigator.pushNamed(
       context,
       AppRoutes.library,
-      arguments: folder.id,
+      arguments: LibraryScreenArguments(
+        folderId: folder.id,
+        folderName: folder.name,
+      ),
     );
   }
 
@@ -175,8 +170,12 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> {
           ),
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: () {
-              Navigator.pushNamed(context, AppRoutes.import);
+            onPressed: () async {
+              final result = await Navigator.pushNamed(context, AppRoutes.import);
+              // Reload data if import completed
+              if (result == true) {
+                _loadData();
+              }
             },
             tooltip: l10n.import,
           ),
@@ -198,8 +197,7 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> {
   }
 
   String _getCurrentFolderName() {
-    // TODO: Get actual folder name from database
-    return 'Folder';
+    return widget.folderName ?? 'Folder';
   }
 
   Widget _buildContent(AppLocalizations l10n) {

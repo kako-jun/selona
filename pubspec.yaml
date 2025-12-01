@@ -52,6 +52,9 @@ dependencies:
 
   # Rust Bridge (for pink-072 encryption)
   flutter_rust_bridge: ^2.6.0
+  archive: ^4.0.7
+  url_launcher: ^6.3.1
+  sqflite_common_ffi: ^2.3.4+4
 
 dev_dependencies:
   flutter_test:

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:archive/archive.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as path;
 
@@ -7,9 +8,13 @@ import '../../shared/models/media_file.dart';
 import '../database/folder_repository.dart';
 import '../database/media_file_repository.dart';
 import 'crypto_service.dart';
+import 'thumbnail_service.dart';
 
-/// Progress callback for import operations
-typedef ImportProgressCallback = void Function(
+/// Progress callback for import operations (simple version)
+typedef ImportProgressCallback = void Function(int current, int total);
+
+/// Progress callback for import operations (with filename)
+typedef ImportProgressCallbackWithName = void Function(
     int current, int total, String filename);
 
 /// Result of an import operation
@@ -37,6 +42,7 @@ class ImportService {
   final _crypto = CryptoService.instance;
   final _folderRepo = FolderRepository.instance;
   final _mediaRepo = MediaFileRepository.instance;
+  final _thumbnail = ThumbnailService.instance;
 
   /// Supported image extensions
   static const imageExtensions = {
@@ -58,9 +64,19 @@ class ImportService {
     '.m4v'
   };
 
-  /// All supported extensions
+  /// Supported archive extensions
+  static const archiveExtensions = {'.zip'};
+
+  /// All supported extensions (media only, not archives)
   static Set<String> get supportedExtensions =>
       {...imageExtensions, ...videoExtensions};
+
+  /// Check if extension is supported (including archives)
+  bool isSupportedExtension(String ext) {
+    final lower = ext.toLowerCase();
+    return supportedExtensions.contains(lower) ||
+        archiveExtensions.contains(lower);
+  }
 
   /// Check if a file is a supported media file
   bool isSupportedMedia(String filePath) {
@@ -110,6 +126,9 @@ class ImportService {
       // Encode to .pnk using the generated UUID
       await _crypto.encodeFile(sourcePath, mediaFile.id);
 
+      // Generate thumbnail
+      await _thumbnail.generateThumbnail(mediaFile.id, sourcePath, mediaType);
+
       // Delete original if requested
       if (deleteAfterImport) {
         try {
@@ -128,7 +147,7 @@ class ImportService {
     }
   }
 
-  /// Import multiple files
+  /// Import multiple files (with ZIP extraction support)
   Future<ImportResult> importFiles(
     List<String> filePaths, {
     String? targetFolderId,
@@ -138,9 +157,22 @@ class ImportService {
     final errors = <String>[];
     var successCount = 0;
 
-    for (var i = 0; i < filePaths.length; i++) {
-      final filePath = filePaths[i];
-      onProgress?.call(i + 1, filePaths.length, path.basename(filePath));
+    // Expand ZIPs first
+    final expandedFiles = <String>[];
+    for (final filePath in filePaths) {
+      final ext = path.extension(filePath).toLowerCase();
+      if (archiveExtensions.contains(ext)) {
+        // Extract ZIP
+        final extracted = await _extractZip(filePath);
+        expandedFiles.addAll(extracted);
+      } else {
+        expandedFiles.add(filePath);
+      }
+    }
+
+    for (var i = 0; i < expandedFiles.length; i++) {
+      final filePath = expandedFiles[i];
+      onProgress?.call(i + 1, expandedFiles.length);
 
       final result = await importFile(
         filePath,
@@ -156,11 +188,42 @@ class ImportService {
     }
 
     return ImportResult(
-      totalFiles: filePaths.length,
+      totalFiles: expandedFiles.length,
       successCount: successCount,
-      failureCount: filePaths.length - successCount,
+      failureCount: expandedFiles.length - successCount,
       errors: errors,
     );
+  }
+
+  /// Extract ZIP file and return list of extracted file paths
+  Future<List<String>> _extractZip(String zipPath) async {
+    final extractedPaths = <String>[];
+
+    try {
+      final bytes = await File(zipPath).readAsBytes();
+      final archive = ZipDecoder().decodeBytes(bytes);
+      final tempDir = Directory.systemTemp.createTempSync('selona_extract_');
+
+      for (final file in archive) {
+        if (file.isFile) {
+          final ext = path.extension(file.name).toLowerCase();
+          if (supportedExtensions.contains(ext)) {
+            final outputPath = path.join(tempDir.path, file.name);
+            final outputDir = Directory(path.dirname(outputPath));
+            if (!outputDir.existsSync()) {
+              outputDir.createSync(recursive: true);
+            }
+            final outputFile = File(outputPath);
+            await outputFile.writeAsBytes(file.content as List<int>);
+            extractedPaths.add(outputPath);
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint('Failed to extract ZIP: $e');
+    }
+
+    return extractedPaths;
   }
 
   /// Import a folder (preserving structure)
@@ -193,6 +256,11 @@ class ImportService {
       );
     }
 
+    // Create root folder for the imported folder itself
+    final rootFolderName = path.basename(folderPath);
+    final rootFolder = await _folderRepo.createPath(rootFolderName);
+    final rootFolderId = rootFolder.id;
+
     // Create folder structure and import files
     final errors = <String>[];
     var successCount = 0;
@@ -200,15 +268,16 @@ class ImportService {
 
     for (var i = 0; i < filesToImport.length; i++) {
       final item = filesToImport[i];
-      onProgress?.call(
-          i + 1, filesToImport.length, path.basename(item.filePath));
+      onProgress?.call(i + 1, filesToImport.length);
 
       try {
         // Get or create folder for this file
-        String? folderId = targetFolderId;
+        String folderId = rootFolderId;
         if (item.relativeFolderPath.isNotEmpty) {
+          // Create subfolder path under the root folder
+          final fullRelativePath = '$rootFolderName/${item.relativeFolderPath}';
           folderId = await _getOrCreateFolder(
-            item.relativeFolderPath,
+            fullRelativePath,
             targetFolderId,
             folderCache,
           );
@@ -270,38 +339,22 @@ class ImportService {
   }
 
   /// Get or create folder from relative path
+  /// Uses FolderRepository.createPath which handles duplicate checking
   Future<String> _getOrCreateFolder(
     String relativeFolderPath,
     String? parentFolderId,
     Map<String, String> cache,
   ) async {
-    // Check cache
+    // Check cache first
     final cacheKey = '${parentFolderId ?? ''}/$relativeFolderPath';
     if (cache.containsKey(cacheKey)) {
       return cache[cacheKey]!;
     }
 
-    // Build full path for folder creation
-    final parts =
-        relativeFolderPath.split('/').where((p) => p.isNotEmpty).toList();
-    String? currentParentId = parentFolderId;
-
-    for (final folderName in parts) {
-      final partKey = '${currentParentId ?? ''}/$folderName';
-      if (cache.containsKey(partKey)) {
-        currentParentId = cache[partKey];
-      } else {
-        final folder = await _folderRepo.create(
-          name: folderName,
-          parentId: currentParentId,
-        );
-        cache[partKey] = folder.id;
-        currentParentId = folder.id;
-      }
-    }
-
-    cache[cacheKey] = currentParentId!;
-    return currentParentId;
+    // Use createPath which handles existing folder lookup
+    final folder = await _folderRepo.createPath(relativeFolderPath);
+    cache[cacheKey] = folder.id;
+    return folder.id;
   }
 
   /// Delete empty folders recursively

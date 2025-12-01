@@ -3,7 +3,8 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 
 import '../constants/storage_paths.dart';
-import '../ffi/api/crypto.dart' as rust_crypto;
+// TODO: Re-enable after fixing flutter_rust_bridge FFI generation
+// import '../ffi/api/crypto.dart' as rust_crypto;
 
 /// Service for encoding/decoding files using pink072 via Rust FFI
 class CryptoService {
@@ -38,14 +39,17 @@ class CryptoService {
     // Ensure output directory exists
     await Directory(StoragePaths.pnkFilesDir).create(recursive: true);
 
-    // Call Rust FFI to encode
-    rust_crypto.encodeToPnk(
-      inputPath: sourcePath,
-      outputPath: outputPath,
-      passphrase: _passphrase!,
-    );
+    // TODO: Re-enable Rust FFI
+    // rust_crypto.encodeToPnk(
+    //   inputPath: sourcePath,
+    //   outputPath: outputPath,
+    //   passphrase: _passphrase!,
+    // );
 
-    debugPrint('Encoded $sourcePath -> $outputPath');
+    // Mock: just copy file for now
+    await File(sourcePath).copy(outputPath);
+
+    debugPrint('Encoded (mock) $sourcePath -> $outputPath');
   }
 
   /// Decode a .pnk file to temp directory for viewing
@@ -60,27 +64,29 @@ class CryptoService {
     // Ensure temp directory exists
     await Directory(tempDir).create(recursive: true);
 
-    // Call Rust FFI to decode
-    final decodedFilename = rust_crypto.decodeFromPnk(
-      inputPath: pnkPath,
-      outputDir: tempDir,
-    );
+    // TODO: Re-enable Rust FFI
+    // final decodedFilename = rust_crypto.decodeFromPnk(
+    //   inputPath: pnkPath,
+    //   outputDir: tempDir,
+    // );
 
-    final tempPath = '$tempDir/$decodedFilename';
+    // Mock: just copy file with original extension
+    final tempPath = '$tempDir/$uuid$originalExtension';
+    await File(pnkPath).copy(tempPath);
 
-    debugPrint('Decoded $pnkPath -> $tempPath');
+    debugPrint('Decoded (mock) $pnkPath -> $tempPath');
     return tempPath;
   }
 
   /// Delete a temp decoded file after viewing
   Future<void> deleteTempFile(String tempPath) async {
     try {
-      rust_crypto.deleteTempFile(path: tempPath);
+      // TODO: Re-enable Rust FFI
+      // rust_crypto.deleteTempFile(path: tempPath);
+      await StoragePaths.deleteTempFile(tempPath);
       debugPrint('Deleted temp file: $tempPath');
     } catch (e) {
-      // Fallback to Dart deletion if Rust fails
-      await StoragePaths.deleteTempFile(tempPath);
-      debugPrint('Deleted temp file (fallback): $tempPath');
+      debugPrint('Failed to delete temp file: $e');
     }
   }
 
@@ -96,14 +102,17 @@ class CryptoService {
       return;
     }
 
-    // Call Rust FFI to encode database
-    rust_crypto.encodeToPnk(
-      inputPath: dbPath,
-      outputPath: pnkPath,
-      passphrase: _passphrase!,
-    );
+    // TODO: Re-enable Rust FFI
+    // rust_crypto.encodeToPnk(
+    //   inputPath: dbPath,
+    //   outputPath: pnkPath,
+    //   passphrase: _passphrase!,
+    // );
 
-    debugPrint('Encoded database -> $pnkPath');
+    // Mock: just copy file
+    await File(dbPath).copy(pnkPath);
+
+    debugPrint('Encoded (mock) database -> $pnkPath');
   }
 
   /// Decode the database .pnk for use
@@ -122,13 +131,17 @@ class CryptoService {
     // Ensure temp directory exists
     await Directory(tempDir).create(recursive: true);
 
-    // Call Rust FFI to decode database
-    final decodedFilename = rust_crypto.decodeFromPnk(
-      inputPath: pnkPath,
-      outputDir: tempDir,
-    );
+    // TODO: Re-enable Rust FFI
+    // final decodedFilename = rust_crypto.decodeFromPnk(
+    //   inputPath: pnkPath,
+    //   outputDir: tempDir,
+    // );
 
-    debugPrint('Decoded database -> $tempDir/$decodedFilename');
+    // Mock: just copy file
+    final dbPath = StoragePaths.tempDatabasePath;
+    await File(pnkPath).copy(dbPath);
+
+    debugPrint('Decoded (mock) database -> $dbPath');
     return true;
   }
 
@@ -151,14 +164,17 @@ class CryptoService {
     // Ensure thumbnail directory exists
     await Directory(StoragePaths.thumbnailsDir).create(recursive: true);
 
-    // Call Rust FFI to encode thumbnail
-    rust_crypto.encodeToPnk(
-      inputPath: sourcePath,
-      outputPath: outputPath,
-      passphrase: _passphrase!,
-    );
+    // TODO: Re-enable Rust FFI
+    // rust_crypto.encodeToPnk(
+    //   inputPath: sourcePath,
+    //   outputPath: outputPath,
+    //   passphrase: _passphrase!,
+    // );
 
-    debugPrint('Encoded thumbnail -> $outputPath');
+    // Mock: just copy file
+    await File(sourcePath).copy(outputPath);
+
+    debugPrint('Encoded (mock) thumbnail -> $outputPath');
   }
 
   /// Decode thumbnail for display
@@ -174,8 +190,11 @@ class CryptoService {
     }
 
     try {
-      // Call Rust FFI to decode directly to memory
-      return rust_crypto.decodeToBytes(inputPath: pnkPath);
+      // TODO: Re-enable Rust FFI
+      // return rust_crypto.decodeToBytes(inputPath: pnkPath);
+
+      // Mock: just read file
+      return await file.readAsBytes();
     } catch (e) {
       debugPrint('Failed to decode thumbnail: $e');
       return null;

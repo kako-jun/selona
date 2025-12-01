@@ -66,17 +66,13 @@ class ThumbnailService {
     }
   }
 
-  /// Resize image (runs in isolate)
+  /// Resize image with center crop (runs in isolate)
   static Uint8List? _resizeImage(Uint8List bytes) {
     final image = img.decodeImage(bytes);
     if (image == null) return null;
 
-    final thumbnail = img.copyResize(
-      image,
-      width: thumbnailSize,
-      height: thumbnailSize,
-      maintainAspect: true,
-    );
+    // Center crop to square, then resize
+    final thumbnail = img.copyResizeCropSquare(image, size: thumbnailSize);
 
     return Uint8List.fromList(img.encodeJpg(thumbnail, quality: jpegQuality));
   }

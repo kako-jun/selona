@@ -8,10 +8,13 @@
 
 #include <fc_native_video_thumbnail/fc_native_video_thumbnail_plugin_c_api.h>
 #include <flutter_secure_storage_windows/flutter_secure_storage_windows_plugin.h>
+#include <url_launcher_windows/url_launcher_windows.h>
 
 void RegisterPlugins(flutter::PluginRegistry* registry) {
   FcNativeVideoThumbnailPluginCApiRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("FcNativeVideoThumbnailPluginCApi"));
   FlutterSecureStorageWindowsPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("FlutterSecureStorageWindowsPlugin"));
+  UrlLauncherWindowsRegisterWithRegistrar(
+      registry->GetRegistrarForPlugin("UrlLauncherWindows"));
 }

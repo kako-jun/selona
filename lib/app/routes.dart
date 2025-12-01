@@ -38,9 +38,12 @@ class AppRoutes {
           settings,
         );
       case library:
-        final folderId = settings.arguments as String?;
+        final args = settings.arguments as LibraryScreenArguments?;
         return _buildRoute(
-          LibraryScreen(folderId: folderId),
+          LibraryScreen(
+            folderId: args?.folderId,
+            folderName: args?.folderName,
+          ),
           settings,
         );
       case import:
@@ -201,6 +204,17 @@ class NotFoundScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Arguments for the library screen (when opening a folder)
+class LibraryScreenArguments {
+  final String? folderId;
+  final String? folderName;
+
+  const LibraryScreenArguments({
+    this.folderId,
+    this.folderName,
+  });
 }
 
 /// Arguments for the viewer screen

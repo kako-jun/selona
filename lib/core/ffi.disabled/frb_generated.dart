@@ -13,9 +13,10 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 /// Main entrypoint of the Rust API
 class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
-  RustLib._();
   @internal
   static final instance = RustLib._();
+
+  RustLib._();
 
   /// Initialize flutter_rust_bridge
   static Future<void> init({
@@ -118,8 +119,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       {required String inputPath, required String outputDir}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
-        final arg0 = cst_encode_String(inputPath);
-        final arg1 = cst_encode_String(outputDir);
+        var arg0 = cst_encode_String(inputPath);
+        var arg1 = cst_encode_String(outputDir);
         return wire.wire__crate__api__crypto__decode_from_pnk(arg0, arg1);
       },
       codec: DcoCodec(
@@ -134,8 +135,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   TaskConstMeta get kCrateApiCryptoDecodeFromPnkConstMeta =>
       const TaskConstMeta(
-        debugName: 'decode_from_pnk',
-        argNames: ['inputPath', 'outputDir'],
+        debugName: "decode_from_pnk",
+        argNames: ["inputPath", "outputDir"],
       );
 
   @override
@@ -143,8 +144,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       {required String inputPath, required String outputDir}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
-        final arg0 = cst_encode_String(inputPath);
-        final arg1 = cst_encode_String(outputDir);
+        var arg0 = cst_encode_String(inputPath);
+        var arg1 = cst_encode_String(outputDir);
         return wire.wire__crate__api__crypto__decode_from_pnk_auto(arg0, arg1);
       },
       codec: DcoCodec(
@@ -159,15 +160,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   TaskConstMeta get kCrateApiCryptoDecodeFromPnkAutoConstMeta =>
       const TaskConstMeta(
-        debugName: 'decode_from_pnk_auto',
-        argNames: ['inputPath', 'outputDir'],
+        debugName: "decode_from_pnk_auto",
+        argNames: ["inputPath", "outputDir"],
       );
 
   @override
   Uint8List crateApiCryptoDecodeToBytes({required String inputPath}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
-        final arg0 = cst_encode_String(inputPath);
+        var arg0 = cst_encode_String(inputPath);
         return wire.wire__crate__api__crypto__decode_to_bytes(arg0);
       },
       codec: DcoCodec(
@@ -182,15 +183,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   TaskConstMeta get kCrateApiCryptoDecodeToBytesConstMeta =>
       const TaskConstMeta(
-        debugName: 'decode_to_bytes',
-        argNames: ['inputPath'],
+        debugName: "decode_to_bytes",
+        argNames: ["inputPath"],
       );
 
   @override
   void crateApiCryptoDeleteTempDir({required String path}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
-        final arg0 = cst_encode_String(path);
+        var arg0 = cst_encode_String(path);
         return wire.wire__crate__api__crypto__delete_temp_dir(arg0);
       },
       codec: DcoCodec(
@@ -205,15 +206,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   TaskConstMeta get kCrateApiCryptoDeleteTempDirConstMeta =>
       const TaskConstMeta(
-        debugName: 'delete_temp_dir',
-        argNames: ['path'],
+        debugName: "delete_temp_dir",
+        argNames: ["path"],
       );
 
   @override
   void crateApiCryptoDeleteTempFile({required String path}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
-        final arg0 = cst_encode_String(path);
+        var arg0 = cst_encode_String(path);
         return wire.wire__crate__api__crypto__delete_temp_file(arg0);
       },
       codec: DcoCodec(
@@ -228,8 +229,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   TaskConstMeta get kCrateApiCryptoDeleteTempFileConstMeta =>
       const TaskConstMeta(
-        debugName: 'delete_temp_file',
-        argNames: ['path'],
+        debugName: "delete_temp_file",
+        argNames: ["path"],
       );
 
   @override
@@ -239,9 +240,9 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       required String passphrase}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
-        final arg0 = cst_encode_String(inputPath);
-        final arg1 = cst_encode_String(outputPath);
-        final arg2 = cst_encode_String(passphrase);
+        var arg0 = cst_encode_String(inputPath);
+        var arg1 = cst_encode_String(outputPath);
+        var arg2 = cst_encode_String(passphrase);
         return wire.wire__crate__api__crypto__encode_to_pnk(arg0, arg1, arg2);
       },
       codec: DcoCodec(
@@ -255,15 +256,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   TaskConstMeta get kCrateApiCryptoEncodeToPnkConstMeta => const TaskConstMeta(
-        debugName: 'encode_to_pnk',
-        argNames: ['inputPath', 'outputPath', 'passphrase'],
+        debugName: "encode_to_pnk",
+        argNames: ["inputPath", "outputPath", "passphrase"],
       );
 
   @override
   String crateApiCryptoHashPassphrase({required String passphrase}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
-        final arg0 = cst_encode_String(passphrase);
+        var arg0 = cst_encode_String(passphrase);
         return wire.wire__crate__api__crypto__hash_passphrase(arg0);
       },
       codec: DcoCodec(
@@ -278,15 +279,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   TaskConstMeta get kCrateApiCryptoHashPassphraseConstMeta =>
       const TaskConstMeta(
-        debugName: 'hash_passphrase',
-        argNames: ['passphrase'],
+        debugName: "hash_passphrase",
+        argNames: ["passphrase"],
       );
 
   @override
   String crateApiCryptoHashPin({required String pin}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
-        final arg0 = cst_encode_String(pin);
+        var arg0 = cst_encode_String(pin);
         return wire.wire__crate__api__crypto__hash_pin(arg0);
       },
       codec: DcoCodec(
@@ -300,8 +301,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   TaskConstMeta get kCrateApiCryptoHashPinConstMeta => const TaskConstMeta(
-        debugName: 'hash_pin',
-        argNames: ['pin'],
+        debugName: "hash_pin",
+        argNames: ["pin"],
       );
 
   @override
@@ -309,8 +310,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       {required String passphrase, required String hash}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
-        final arg0 = cst_encode_String(passphrase);
-        final arg1 = cst_encode_String(hash);
+        var arg0 = cst_encode_String(passphrase);
+        var arg1 = cst_encode_String(hash);
         return wire.wire__crate__api__crypto__verify_passphrase(arg0, arg1);
       },
       codec: DcoCodec(
@@ -325,16 +326,16 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   TaskConstMeta get kCrateApiCryptoVerifyPassphraseConstMeta =>
       const TaskConstMeta(
-        debugName: 'verify_passphrase',
-        argNames: ['passphrase', 'hash'],
+        debugName: "verify_passphrase",
+        argNames: ["passphrase", "hash"],
       );
 
   @override
   bool crateApiCryptoVerifyPin({required String pin, required String hash}) {
     return handler.executeSync(SyncTask(
       callFfi: () {
-        final arg0 = cst_encode_String(pin);
-        final arg1 = cst_encode_String(hash);
+        var arg0 = cst_encode_String(pin);
+        var arg1 = cst_encode_String(hash);
         return wire.wire__crate__api__crypto__verify_pin(arg0, arg1);
       },
       codec: DcoCodec(
@@ -348,8 +349,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   TaskConstMeta get kCrateApiCryptoVerifyPinConstMeta => const TaskConstMeta(
-        debugName: 'verify_pin',
-        argNames: ['pin', 'hash'],
+        debugName: "verify_pin",
+        argNames: ["pin", "hash"],
       );
 
   @protected
@@ -391,7 +392,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   @protected
   String sse_decode_String(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    final inner = sse_decode_list_prim_u_8_strict(deserializer);
+    var inner = sse_decode_list_prim_u_8_strict(deserializer);
     return utf8.decoder.convert(inner);
   }
 
@@ -405,8 +406,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   List<String> sse_decode_list_String(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
 
-    final len_ = sse_decode_i_32(deserializer);
-    final ans_ = <String>[];
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <String>[];
     for (var idx_ = 0; idx_ < len_; ++idx_) {
       ans_.add(sse_decode_String(deserializer));
     }
@@ -416,7 +417,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   @protected
   Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    final len_ = sse_decode_i_32(deserializer);
+    var len_ = sse_decode_i_32(deserializer);
     return deserializer.buffer.getUint8List(len_);
   }
 

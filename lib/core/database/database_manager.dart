@@ -76,6 +76,8 @@ class DatabaseManager {
         original_extension TEXT NOT NULL,
         folder_id TEXT,
         media_type TEXT NOT NULL,
+        encrypted_path TEXT NOT NULL,
+        encrypted_thumbnail_path TEXT,
         file_size INTEGER NOT NULL,
         imported_at INTEGER NOT NULL,
         last_viewed_at INTEGER,

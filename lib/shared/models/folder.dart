@@ -8,12 +8,20 @@ class Folder extends Equatable {
   final DateTime createdAt;
   final DateTime updatedAt;
 
+  /// UUIDs of files to show as preview thumbnails (max 4)
+  final List<String> previewFileIds;
+
+  /// Total file count in this folder
+  final int fileCount;
+
   const Folder({
     required this.id,
     required this.name,
     this.parentId,
     required this.createdAt,
     required this.updatedAt,
+    this.previewFileIds = const [],
+    this.fileCount = 0,
   });
 
   /// Create from database map
@@ -46,6 +54,8 @@ class Folder extends Equatable {
     bool clearParentId = false,
     DateTime? createdAt,
     DateTime? updatedAt,
+    List<String>? previewFileIds,
+    int? fileCount,
   }) {
     return Folder(
       id: id ?? this.id,
@@ -53,9 +63,12 @@ class Folder extends Equatable {
       parentId: clearParentId ? null : (parentId ?? this.parentId),
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      previewFileIds: previewFileIds ?? this.previewFileIds,
+      fileCount: fileCount ?? this.fileCount,
     );
   }
 
   @override
-  List<Object?> get props => [id, name, parentId, createdAt, updatedAt];
+  List<Object?> get props =>
+      [id, name, parentId, createdAt, updatedAt, previewFileIds, fileCount];
 }

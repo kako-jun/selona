@@ -26,6 +26,7 @@ class ViewerScreen extends ConsumerStatefulWidget {
 class _ViewerScreenState extends ConsumerState<ViewerScreen> {
   late PageController _pageController;
   late int _currentIndex;
+  late FocusNode _focusNode;
   bool _showControls = true;
   bool _isFullscreen = true;
   bool _isSlideshow = false;
@@ -39,9 +40,15 @@ class _ViewerScreenState extends ConsumerState<ViewerScreen> {
     super.initState();
     _currentIndex = widget.arguments.initialIndex;
     _pageController = PageController(initialPage: _currentIndex);
+    _focusNode = FocusNode();
 
     // Hide system UI for immersive viewing
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+
+    // Request focus after build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _focusNode.requestFocus();
+    });
   }
 
   @override
@@ -49,6 +56,7 @@ class _ViewerScreenState extends ConsumerState<ViewerScreen> {
     // Restore system UI
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     _pageController.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -191,13 +199,36 @@ class _ViewerScreenState extends ConsumerState<ViewerScreen> {
     HapticFeedback.lightImpact();
   }
 
+  void _handleKeyEvent(KeyEvent event) {
+    if (event is KeyDownEvent) {
+      switch (event.logicalKey) {
+        case LogicalKeyboardKey.arrowLeft:
+          _goToPrevious();
+          break;
+        case LogicalKeyboardKey.arrowRight:
+          _goToNext();
+          break;
+        case LogicalKeyboardKey.escape:
+          Navigator.pop(context);
+          break;
+        case LogicalKeyboardKey.space:
+          _toggleControls();
+          break;
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: GestureDetector(
-        onTap: _toggleControls,
-        child: Stack(
+    return KeyboardListener(
+      focusNode: _focusNode,
+      autofocus: true,
+      onKeyEvent: _handleKeyEvent,
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        body: GestureDetector(
+          onTap: _toggleControls,
+          child: Stack(
           fit: StackFit.expand,
           children: [
             // Content viewer
@@ -355,6 +386,7 @@ class _ViewerScreenState extends ConsumerState<ViewerScreen> {
             ],
           ],
         ),
+      ),
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../app/theme.dart';
 import '../../../shared/models/app_settings.dart';
@@ -164,6 +165,28 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             ),
           ),
           ListTile(
+            title: const Text('Developer'),
+            subtitle: const Text('kako-jun'),
+            trailing: const Icon(Icons.open_in_new),
+            onTap: () async {
+              final url = Uri.parse('https://github.com/kako-jun');
+              if (await canLaunchUrl(url)) {
+                await launchUrl(url, mode: LaunchMode.externalApplication);
+              }
+            },
+          ),
+          ListTile(
+            title: const Text('Source Code'),
+            subtitle: const Text('GitHub'),
+            trailing: const Icon(Icons.open_in_new),
+            onTap: () async {
+              final url = Uri.parse('https://github.com/kako-jun/selona');
+              if (await canLaunchUrl(url)) {
+                await launchUrl(url, mode: LaunchMode.externalApplication);
+              }
+            },
+          ),
+          ListTile(
             title: Text(l10n.settingsLicenses),
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
@@ -171,6 +194,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 context: context,
                 applicationName: l10n.appName,
                 applicationVersion: '1.0.0',
+                applicationLegalese: '\u00a9 2025 kako-jun',
               );
             },
           ),
