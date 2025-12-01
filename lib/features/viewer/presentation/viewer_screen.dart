@@ -27,6 +27,7 @@ class _ViewerScreenState extends ConsumerState<ViewerScreen> {
   late PageController _pageController;
   late int _currentIndex;
   bool _showControls = true;
+  bool _isFullscreen = true;
   ImageViewMode _viewMode = ImageViewMode.horizontal;
 
   @override
@@ -91,6 +92,17 @@ class _ViewerScreenState extends ConsumerState<ViewerScreen> {
   void _onViewModeChanged(ImageViewMode mode) {
     setState(() {
       _viewMode = mode;
+    });
+  }
+
+  void _toggleFullscreen() {
+    setState(() {
+      _isFullscreen = !_isFullscreen;
+      if (_isFullscreen) {
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+      } else {
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+      }
     });
   }
 
@@ -166,6 +178,16 @@ class _ViewerScreenState extends ConsumerState<ViewerScreen> {
                             onPressed: () => Navigator.pop(context),
                           ),
                           const Spacer(),
+                          // Fullscreen toggle
+                          IconButton(
+                            icon: Icon(
+                              _isFullscreen
+                                  ? Icons.fullscreen_exit
+                                  : Icons.fullscreen,
+                              color: Colors.white,
+                            ),
+                            onPressed: _toggleFullscreen,
+                          ),
                           IconButton(
                             icon: Icon(
                               _currentFile.isBookmarked
