@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../app/theme.dart';
 import '../../../../shared/models/media_file.dart';
 import 'thumbnail_card.dart';
 

@@ -9,14 +9,10 @@ crate-type = ["cdylib", "staticlib"]
 
 [dependencies]
 flutter_rust_bridge = "2.6"
-# pink-072 = "0.1"  # TODO: Add when available
+pink072 = "1.1"
 
-# For now, using standard crypto for placeholder implementation
-aes-gcm = "0.10"
-rand = "0.8"
+# For PIN/passphrase hashing
 sha2 = "0.10"
-pbkdf2 = { version = "0.12", features = ["simple"] }
-hmac = "0.12"
 
 [profile.release]
 lto = true
