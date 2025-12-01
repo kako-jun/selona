@@ -354,35 +354,71 @@ flutter_rust_bridge_codegen generate
 - 動画コントロール（再生速度、コマ送り）
 - 動画レジューム（再生位置の保存/復元）UI
 - サムネイル生成サービス（画像リサイズ、動画フレーム抽出）
-- **pink072暗号化統合**（flutter_rust_bridge経由でRust FFI接続済み）
+- **pink072暗号化統合**（flutter_rust_bridge v2.11.1経由でRust FFI接続済み）
 - CryptoService（encode/decode/hash各種メソッド）
 - i18n基盤（日本語/英語）
+- **SQLiteデータベース**（メタデータ管理、folders/media_files/playlists/bookmarks/view_history）
+- **ファイルインポート機能**（フォルダ/ファイル選択 → pink072暗号化 → vault保存）
+- **サムネイル表示**（暗号化サムネイルのリアルタイム復号表示）
+- **画像ビューア**（復号 → 一時ファイル → 表示 → 削除）
 
 ### 🚧 UI実装済み・バックエンド未接続
 - PIN認証画面（検証ロジック未実装）
 - パスフレーズ設定画面（暗号化未接続）
 - 設定画面（DB保存未実装）
-- ライブラリ画面（ダミーデータ表示）
-- インポート画面（実際のファイル処理未実装）
 - ブックマーク/レーティング（DB保存未実装）
 - 動画レジューム（DB保存未実装）
 - 画像/動画の回転保存（DB保存未実装）
 
 ### ❌ 未実装
-- **SQLiteデータベース**（暗号化DB含む）
-- **実際のファイルインポート処理**（UIとの接続）
+- **動画再生**（復号 → 一時ファイル → 再生）
 - **エクスポート機能**（ファイル/フォルダ → 復号化/ZIP出力）
+- **データベース暗号化**（selona.pnk として保存）
 - **アイコン偽装**（iOS: Alternate Icons、Android: Activity Alias）
 - **寝落ち対策**（無操作タイムアウト → 自動終了）
 - **FLAG_SECURE**（スクリーンショット/画面録画禁止）
 - **タスク履歴からの保護**（サムネイル非表示）
 - **カメラ/マイク無効化**
 - **リベンジポルノ防止**（リモートハッシュチェック）
-- **エクスポート機能**
 - **プレイリスト**
 - **ランダムモード**
 - **閲覧履歴**
 - **ソート/フィルタ機能**
+
+## Data Storage Locations
+
+### Linux
+```
+~/Documents/
+├── vault/                    # 暗号化ファイル
+│   ├── {uuid}.pnk           # メディアファイル（pink072暗号化）
+│   └── thumbs/              # サムネイル
+│       └── {uuid}.pnk
+└── selona.pnk               # 暗号化DB（アプリ終了時に作成）
+
+/tmp/selona_decode/
+└── selona.db                # 復号化DB（稼働中のみ）
+```
+
+### SQLite Tables
+- `folders` - フォルダ構造（id, name, parent_id, created_at, updated_at）
+- `media_files` - ファイルメタデータ（id, name, original_extension, folder_id, media_type, encrypted_path, ...）
+- `playlists` - プレイリスト
+- `playlist_items` - プレイリスト内のアイテム
+- `bookmarks` - ブックマーク
+- `view_history` - 閲覧履歴
+- `app_settings` - アプリ設定
+
+## Known Issues / Technical Notes
+
+### flutter_rust_bridge v2.11.1
+- `frb_generated.io.dart` で `typedef bool = ...` が生成される問題あり
+- dart:ffi の `Bool` と競合するため、手動で削除が必要
+- 再生成時に再発する可能性あり
+
+### Linux Build
+- Rust ライブラリは別途ビルドが必要: `cd rust && cargo build --release`
+- `libselona_rust.so` を `build/linux/x64/debug/bundle/lib/` にコピー
 
 ## Related Documentation
 
