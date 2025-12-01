@@ -97,5 +97,17 @@
   "settingsLicenses": "Licenses",
 
   "fileCount": "{count} items",
-  "pageIndicator": "{current}/{total}"
+  "pageIndicator": "{current}/{total}",
+
+  "settingsTerms": "Terms of Use",
+  "termsTitle": "Terms of Use",
+  "termsUserResponsibility": "User Responsibility",
+  "termsUserResponsibilityText": "You are solely responsible for ensuring all content stored in this application complies with applicable laws in your jurisdiction.",
+  "termsNoRecovery": "No Recovery Service",
+  "termsNoRecoveryText": "Your passphrase cannot be recovered. No backdoors exist. If you forget your passphrase, your data is permanently inaccessible.",
+  "termsLimitation": "Limitation of Liability",
+  "termsLimitationText": "This software is provided \"as is\" without warranty. The developers do not monitor or have access to content stored by users.",
+  "termsIntendedUse": "Intended Use",
+  "termsIntendedUseText": "This application is designed for the private storage of personal media that you have the legal right to possess.",
+  "termsAccept": "I understand and accept"
 }

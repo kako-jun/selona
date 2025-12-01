@@ -355,5 +355,50 @@
         "type": "int"
       }
     }
+  },
+
+  "settingsTerms": "利用規約",
+  "@settingsTerms": {
+    "description": "Terms of use setting"
+  },
+  "termsTitle": "利用規約",
+  "@termsTitle": {
+    "description": "Terms title"
+  },
+  "termsUserResponsibility": "ユーザーの責任",
+  "@termsUserResponsibility": {
+    "description": "User responsibility section"
+  },
+  "termsUserResponsibilityText": "このアプリケーションに保存するすべてのコンテンツが、お住まいの地域の法律に準拠していることを確認する責任は、ユーザー自身にあります。",
+  "@termsUserResponsibilityText": {
+    "description": "User responsibility text"
+  },
+  "termsNoRecovery": "復旧サービスなし",
+  "@termsNoRecovery": {
+    "description": "No recovery section"
+  },
+  "termsNoRecoveryText": "パスフレーズの復旧はできません。バックドアは存在しません。パスフレーズを忘れた場合、データは永久にアクセス不能になります。",
+  "@termsNoRecoveryText": {
+    "description": "No recovery text"
+  },
+  "termsLimitation": "免責事項",
+  "@termsLimitation": {
+    "description": "Limitation section"
+  },
+  "termsLimitationText": "本ソフトウェアは「現状のまま」提供され、いかなる保証もありません。開発者はユーザーが保存したコンテンツを監視またはアクセスすることはありません。",
+  "@termsLimitationText": {
+    "description": "Limitation text"
+  },
+  "termsIntendedUse": "想定される使用方法",
+  "@termsIntendedUse": {
+    "description": "Intended use section"
+  },
+  "termsIntendedUseText": "このアプリケーションは、ユーザーが合法的に所有する権利のある個人的なメディアを非公開で保存するために設計されています。",
+  "@termsIntendedUseText": {
+    "description": "Intended use text"
+  },
+  "termsAccept": "理解し、同意します",
+  "@termsAccept": {
+    "description": "Accept button"
   }
 }
