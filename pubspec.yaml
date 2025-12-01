@@ -34,6 +34,10 @@ dependencies:
 
   # Image
   photo_view: ^0.15.0
+  image: ^4.2.0
+
+  # Video Thumbnail (Android/iOS/Windows/macOS - Linux fallback to icon)
+  fc_native_video_thumbnail: ^0.5.0
 
   # Utilities
   uuid: ^4.5.1

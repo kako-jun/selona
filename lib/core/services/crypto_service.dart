@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 
 import '../constants/storage_paths.dart';
@@ -132,6 +133,40 @@ class CryptoService {
       await file.delete();
       debugPrint('Deleted encrypted file: $pnkPath');
     }
+  }
+
+  /// Encode thumbnail to .pnk
+  Future<void> encodeThumbnail(String sourcePath, String uuid) async {
+    _ensurePassphrase();
+
+    final outputPath = StoragePaths.thumbnailPnkPath(uuid);
+
+    // TODO: Call Rust FFI
+    // await rust_lib.encode_to_pnk(sourcePath, outputPath, _passphrase!);
+
+    // Mock: Just copy
+    await File(sourcePath).copy(outputPath);
+
+    debugPrint('Encoded thumbnail -> $outputPath');
+  }
+
+  /// Decode thumbnail for display
+  /// Returns the decoded bytes, or null if not available
+  Future<Uint8List?> decodeThumbnail(String uuid) async {
+    _ensurePassphrase();
+
+    final pnkPath = StoragePaths.thumbnailPnkPath(uuid);
+    final file = File(pnkPath);
+
+    if (!await file.exists()) {
+      return null;
+    }
+
+    // TODO: Call Rust FFI to decode to memory
+    // return await rust_lib.decode_from_pnk_to_bytes(pnkPath, _passphrase!);
+
+    // Mock: Just read the file
+    return await file.readAsBytes();
   }
 
   /// Delete thumbnail .pnk
