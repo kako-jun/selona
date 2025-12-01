@@ -225,17 +225,17 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
             // Selection buttons
             if (!_isImporting && _selection.isEmpty) ...[
               _buildSelectionButton(
-                icon: Icons.folder,
-                label: l10n.selectFolder,
-                subtitle: 'Import entire folder',
-                onTap: _selectFolder,
+                icon: Icons.insert_drive_file,
+                label: l10n.selectFiles,
+                subtitle: l10n.selectImagesVideosZip,
+                onTap: _selectFiles,
               ),
               const SizedBox(height: 16),
               _buildSelectionButton(
-                icon: Icons.insert_drive_file,
-                label: 'Select Files',
-                subtitle: 'Images, videos, or ZIP',
-                onTap: _selectFiles,
+                icon: Icons.folder,
+                label: l10n.selectFolder,
+                subtitle: l10n.importEntireFolder,
+                onTap: _selectFolder,
               ),
             ],
 
@@ -253,7 +253,9 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
                     Row(
                       children: [
                         Icon(
-                          _selection.isFolder ? Icons.folder : Icons.insert_drive_file,
+                          _selection.isFolder
+                              ? Icons.folder
+                              : Icons.insert_drive_file,
                           size: 40,
                           color: SelonaColors.primaryAccent,
                         ),
@@ -273,7 +275,10 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
                                 _scannedFileCount > 0
                                     ? '$_scannedFileCount files'
                                     : 'Scanning...',
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(
                                       color: SelonaColors.textSecondary,
                                     ),
                               ),
@@ -323,7 +328,9 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
             ],
 
             // Delete after import checkbox
-            if (!_isImporting && !_selection.isEmpty && _scannedFileCount > 0) ...[
+            if (!_isImporting &&
+                !_selection.isEmpty &&
+                _scannedFileCount > 0) ...[
               const SizedBox(height: 16),
               CheckboxListTile(
                 value: _deleteAfterImport,
@@ -347,7 +354,9 @@ class _ImportScreenState extends ConsumerState<ImportScreen> {
             ],
 
             // Import button
-            if (!_isImporting && !_selection.isEmpty && _scannedFileCount > 0) ...[
+            if (!_isImporting &&
+                !_selection.isEmpty &&
+                _scannedFileCount > 0) ...[
               const SizedBox(height: 16),
               ElevatedButton.icon(
                 onPressed: _startImport,

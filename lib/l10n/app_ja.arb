@@ -94,6 +94,18 @@
   "@selectFolder": {
     "description": "Select folder action"
   },
+  "selectFiles": "ファイルを選択",
+  "@selectFiles": {
+    "description": "Select files action"
+  },
+  "importEntireFolder": "フォルダごとインポート",
+  "@importEntireFolder": {
+    "description": "Import entire folder subtitle"
+  },
+  "selectImagesVideosZip": "画像、動画、またはZIP",
+  "@selectImagesVideosZip": {
+    "description": "Select images, videos, or ZIP subtitle"
+  },
   "importing": "インポート中...",
   "@importing": {
     "description": "Importing status"

@@ -26,6 +26,9 @@
   "importToStart": "Import a folder to get started",
 
   "selectFolder": "Select folder",
+  "selectFiles": "Select files",
+  "importEntireFolder": "Import entire folder",
+  "selectImagesVideosZip": "Images, videos, or ZIP",
   "importing": "Importing...",
   "importComplete": "Import complete",
   "importFailed": "Import failed",
