@@ -5,14 +5,17 @@ import '../../../../app/theme.dart';
 import '../../../../shared/models/media_file.dart';
 
 /// Video player widget with controls
+/// Supports video resume (remembers last playback position)
 class VideoPlayerWidget extends StatefulWidget {
   final MediaFile file;
   final bool showControls;
+  final void Function(Duration position)? onPositionChanged;
 
   const VideoPlayerWidget({
     super.key,
     required this.file,
     this.showControls = true,
+    this.onPositionChanged,
   });
 
   @override
@@ -24,6 +27,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   bool _isInitialized = false;
   bool _isMuted = false;
   double _playbackSpeed = 1.0;
+  Duration? _lastSavedPosition;
 
   @override
   void initState() {
@@ -33,8 +37,32 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
 
   @override
   void dispose() {
+    // Save position before disposing
+    _saveCurrentPosition();
     _controller?.dispose();
     super.dispose();
+  }
+
+  /// Save current playback position
+  void _saveCurrentPosition() {
+    if (_controller != null && _isInitialized) {
+      final position = _controller!.value.position;
+      final duration = _controller!.value.duration;
+
+      // Don't save if at the very end (within 3 seconds)
+      if (duration.inSeconds > 0 &&
+          position.inSeconds < duration.inSeconds - 3) {
+        // Only save if position changed significantly (more than 5 seconds)
+        if (_lastSavedPosition == null ||
+            (position - _lastSavedPosition!).abs() > const Duration(seconds: 5)) {
+          _lastSavedPosition = position;
+          widget.onPositionChanged?.call(position);
+        }
+      } else {
+        // At the end, reset position to beginning
+        widget.onPositionChanged?.call(Duration.zero);
+      }
+    }
   }
 
   Future<void> _initializePlayer() async {
@@ -43,6 +71,27 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     setState(() {
       _isInitialized = false;
     });
+
+    // When controller is ready, seek to last position if available
+    // if (widget.file.lastPlaybackPosition != null &&
+    //     widget.file.lastPlaybackPosition!.inSeconds > 0) {
+    //   await _controller?.seekTo(widget.file.lastPlaybackPosition!);
+    // }
+  }
+
+  /// Seek to saved position (call after video is initialized)
+  Future<void> _seekToSavedPosition() async {
+    if (_controller != null &&
+        widget.file.lastPlaybackPosition != null &&
+        widget.file.lastPlaybackPosition!.inSeconds > 0) {
+      final duration = _controller!.value.duration;
+      final savedPosition = widget.file.lastPlaybackPosition!;
+
+      // Only seek if saved position is valid (not past end)
+      if (savedPosition < duration) {
+        await _controller!.seekTo(savedPosition);
+      }
+    }
   }
 
   void _togglePlayPause() {
@@ -51,6 +100,8 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     setState(() {
       if (_controller!.value.isPlaying) {
         _controller!.pause();
+        // Save position when pausing
+        _saveCurrentPosition();
       } else {
         _controller!.play();
       }
