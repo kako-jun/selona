@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 
@@ -5,7 +7,8 @@ import '../../../../app/theme.dart';
 import '../../../../shared/models/media_file.dart';
 import '../../../../shared/models/app_settings.dart';
 
-/// Image viewer widget with zoom and pan support
+/// Image viewer widget with zoom, pan, and rotation support
+/// Rotation is persisted per file and applied automatically
 class ImageViewerWidget extends StatelessWidget {
   final MediaFile file;
   final ImageViewMode viewMode;
@@ -20,15 +23,23 @@ class ImageViewerWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: Load actual decrypted image from encrypted file
 
-    return PhotoView.customChild(
-      backgroundDecoration: const BoxDecoration(
-        color: Colors.black,
+    return Transform.rotate(
+      angle: _getRotationAngle(),
+      child: PhotoView.customChild(
+        backgroundDecoration: const BoxDecoration(
+          color: Colors.black,
+        ),
+        minScale: PhotoViewComputedScale.contained,
+        maxScale: PhotoViewComputedScale.covered * 4,
+        initialScale: PhotoViewComputedScale.contained,
+        child: _buildPlaceholder(context),
       ),
-      minScale: PhotoViewComputedScale.contained,
-      maxScale: PhotoViewComputedScale.covered * 4,
-      initialScale: PhotoViewComputedScale.contained,
-      child: _buildPlaceholder(context),
     );
+  }
+
+  /// Convert rotation enum to radians
+  double _getRotationAngle() {
+    return file.rotation.degrees * math.pi / 180;
   }
 
   Widget _buildPlaceholder(BuildContext context) {

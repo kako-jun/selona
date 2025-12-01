@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
@@ -156,15 +158,18 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     return Stack(
       fit: StackFit.expand,
       children: [
-        // Video
+        // Video with rotation applied
         Center(
-          child: AspectRatio(
-            aspectRatio: _controller!.value.aspectRatio,
-            child: VideoPlayer(_controller!),
+          child: Transform.rotate(
+            angle: _getRotationAngle(),
+            child: AspectRatio(
+              aspectRatio: _controller!.value.aspectRatio,
+              child: VideoPlayer(_controller!),
+            ),
           ),
         ),
 
-        // Video controls overlay
+        // Video controls overlay (not rotated)
         if (widget.showControls)
           Positioned(
             bottom: 80,
@@ -174,6 +179,11 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
           ),
       ],
     );
+  }
+
+  /// Convert rotation enum to radians
+  double _getRotationAngle() {
+    return widget.file.rotation.degrees * math.pi / 180;
   }
 
   Widget _buildPlaceholder() {
