@@ -7,8 +7,7 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 import 'app/app.dart';
-// TODO: Re-enable after fixing flutter_rust_bridge FFI generation
-// import 'core/ffi/frb_generated.dart';
+import 'core/ffi/frb_generated.dart';
 import 'core/constants/storage_paths.dart';
 import 'core/database/database_manager.dart';
 import 'core/services/crypto_service.dart';
@@ -23,8 +22,8 @@ void main() async {
     databaseFactory = databaseFactoryFfi;
   }
 
-  // TODO: Initialize Rust library for pink072 encryption
-  // await RustLib.init();
+  // Initialize Rust library for pink072 encryption
+  await RustLib.init();
 
   // Initialize storage paths
   await StoragePaths.initialize();

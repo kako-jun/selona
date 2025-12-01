@@ -186,6 +186,7 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> {
             },
             tooltip: l10n.settings,
           ),
+          const SizedBox(width: 8),
         ],
       ),
       body: _isLoading
