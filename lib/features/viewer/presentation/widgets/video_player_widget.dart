@@ -62,7 +62,8 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
           position.inSeconds < duration.inSeconds - 3) {
         // Only save if position changed significantly (more than 5 seconds)
         if (_lastSavedPosition == null ||
-            (position - _lastSavedPosition!).abs() > const Duration(seconds: 5)) {
+            (position - _lastSavedPosition!).abs() >
+                const Duration(seconds: 5)) {
           _lastSavedPosition = position;
           widget.onPositionChanged?.call(position);
         }

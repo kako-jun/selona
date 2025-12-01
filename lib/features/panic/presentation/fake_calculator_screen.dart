@@ -81,7 +81,10 @@ class _FakeCalculatorScreenState extends State<FakeCalculatorScreen> {
     if (value == value.toInt()) {
       return value.toInt().toString();
     }
-    return value.toStringAsFixed(8).replaceAll(RegExp(r'0+$'), '').replaceAll(RegExp(r'\.$'), '');
+    return value
+        .toStringAsFixed(8)
+        .replaceAll(RegExp(r'0+$'), '')
+        .replaceAll(RegExp(r'\.$'), '');
   }
 
   void _onClear() {
@@ -216,7 +219,8 @@ class _FakeCalculatorScreenState extends State<FakeCalculatorScreen> {
     );
   }
 
-  Widget _buildFunctionButton(String label, {VoidCallback? onTap, VoidCallback? onLongPress}) {
+  Widget _buildFunctionButton(String label,
+      {VoidCallback? onTap, VoidCallback? onLongPress}) {
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.all(4),
@@ -245,8 +249,10 @@ class _FakeCalculatorScreenState extends State<FakeCalculatorScreen> {
         child: ElevatedButton(
           onPressed: () => _onOperationPressed(op),
           style: ElevatedButton.styleFrom(
-            backgroundColor: isSelected ? Colors.white : const Color(0xFFFF9F0A),
-            foregroundColor: isSelected ? const Color(0xFFFF9F0A) : Colors.white,
+            backgroundColor:
+                isSelected ? Colors.white : const Color(0xFFFF9F0A),
+            foregroundColor:
+                isSelected ? const Color(0xFFFF9F0A) : Colors.white,
             shape: const CircleBorder(),
             textStyle: const TextStyle(fontSize: 36),
           ),

@@ -26,7 +26,8 @@ class ThumbnailService {
   /// Generate thumbnail for a media file
   /// sourcePath is the decoded (temp) file path
   /// Returns true if successful
-  Future<bool> generateThumbnail(String uuid, String sourcePath, MediaType type) async {
+  Future<bool> generateThumbnail(
+      String uuid, String sourcePath, MediaType type) async {
     try {
       Uint8List? thumbnailData;
 

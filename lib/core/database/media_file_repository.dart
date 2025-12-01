@@ -303,7 +303,8 @@ class MediaFileRepository {
     return MediaFile.fromMap(map);
   }
 
-  void _applyFilter(StringBuffer where, List<dynamic> args, MediaFilter filter) {
+  void _applyFilter(
+      StringBuffer where, List<dynamic> args, MediaFilter filter) {
     if (filter.isBookmarked == true) {
       if (where.isNotEmpty) where.write(' AND ');
       where.write('is_bookmarked = 1');

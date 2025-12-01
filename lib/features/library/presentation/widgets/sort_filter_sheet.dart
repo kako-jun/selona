@@ -136,7 +136,9 @@ class SortFilterSheet extends StatelessWidget {
             icon: Icons.fiber_new,
             isSelected: currentFilter == FilterOption.unviewed,
             onTap: () => onFilterChanged(
-              currentFilter == FilterOption.unviewed ? null : FilterOption.unviewed,
+              currentFilter == FilterOption.unviewed
+                  ? null
+                  : FilterOption.unviewed,
             ),
           ),
           _FilterOptionTile(
@@ -144,7 +146,9 @@ class SortFilterSheet extends StatelessWidget {
             icon: Icons.bookmark_outline,
             isSelected: currentFilter == FilterOption.bookmarked,
             onTap: () => onFilterChanged(
-              currentFilter == FilterOption.bookmarked ? null : FilterOption.bookmarked,
+              currentFilter == FilterOption.bookmarked
+                  ? null
+                  : FilterOption.bookmarked,
             ),
           ),
 
@@ -175,12 +179,16 @@ class _SortOptionTile extends StatelessWidget {
     return ListTile(
       leading: Icon(
         icon,
-        color: isSelected ? SelonaColors.primaryAccent : SelonaColors.textSecondary,
+        color: isSelected
+            ? SelonaColors.primaryAccent
+            : SelonaColors.textSecondary,
       ),
       title: Text(
         title,
         style: TextStyle(
-          color: isSelected ? SelonaColors.primaryAccent : SelonaColors.textPrimary,
+          color: isSelected
+              ? SelonaColors.primaryAccent
+              : SelonaColors.textPrimary,
           fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
         ),
       ),
@@ -214,12 +222,16 @@ class _FilterOptionTile extends StatelessWidget {
     return ListTile(
       leading: Icon(
         icon,
-        color: isSelected ? SelonaColors.primaryAccent : SelonaColors.textSecondary,
+        color: isSelected
+            ? SelonaColors.primaryAccent
+            : SelonaColors.textSecondary,
       ),
       title: Text(
         title,
         style: TextStyle(
-          color: isSelected ? SelonaColors.primaryAccent : SelonaColors.textPrimary,
+          color: isSelected
+              ? SelonaColors.primaryAccent
+              : SelonaColors.textPrimary,
           fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
         ),
       ),

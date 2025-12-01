@@ -18,7 +18,7 @@ class ResponsiveGrid {
   /// Calculate optimal column count for media grid based on screen width
   static int getMediaColumnCount(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    return _calculateColumnCount(width, minThumbnailSize, maxThumbnailSize);
+    return calculateColumnCount(width, minThumbnailSize, maxThumbnailSize);
   }
 
   /// Calculate optimal column count for folder grid
@@ -38,7 +38,8 @@ class ResponsiveGrid {
   }
 
   /// Calculate column count to fit items between min and max size
-  static int _calculateColumnCount(
+  /// @visibleForTesting
+  static int calculateColumnCount(
     double availableWidth,
     double minItemSize,
     double maxItemSize,

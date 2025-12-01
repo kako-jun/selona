@@ -9,7 +9,8 @@ import '../database/media_file_repository.dart';
 import 'crypto_service.dart';
 
 /// Progress callback for import operations
-typedef ImportProgressCallback = void Function(int current, int total, String filename);
+typedef ImportProgressCallback = void Function(
+    int current, int total, String filename);
 
 /// Result of an import operation
 class ImportResult {
@@ -38,13 +39,28 @@ class ImportService {
   final _mediaRepo = MediaFileRepository.instance;
 
   /// Supported image extensions
-  static const imageExtensions = {'.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp'};
+  static const imageExtensions = {
+    '.jpg',
+    '.jpeg',
+    '.png',
+    '.gif',
+    '.webp',
+    '.bmp'
+  };
 
   /// Supported video extensions
-  static const videoExtensions = {'.mp4', '.webm', '.mkv', '.avi', '.mov', '.m4v'};
+  static const videoExtensions = {
+    '.mp4',
+    '.webm',
+    '.mkv',
+    '.avi',
+    '.mov',
+    '.m4v'
+  };
 
   /// All supported extensions
-  static Set<String> get supportedExtensions => {...imageExtensions, ...videoExtensions};
+  static Set<String> get supportedExtensions =>
+      {...imageExtensions, ...videoExtensions};
 
   /// Check if a file is a supported media file
   bool isSupportedMedia(String filePath) {
@@ -184,7 +200,8 @@ class ImportService {
 
     for (var i = 0; i < filesToImport.length; i++) {
       final item = filesToImport[i];
-      onProgress?.call(i + 1, filesToImport.length, path.basename(item.filePath));
+      onProgress?.call(
+          i + 1, filesToImport.length, path.basename(item.filePath));
 
       try {
         // Get or create folder for this file
@@ -245,7 +262,8 @@ class ImportService {
         items.add(_ImportItem(
           filePath: entity.path,
           relativePath: relativePath,
-          relativeFolderPath: relativeFolderPath == '.' ? '' : relativeFolderPath,
+          relativeFolderPath:
+              relativeFolderPath == '.' ? '' : relativeFolderPath,
         ));
       }
     }
@@ -264,7 +282,8 @@ class ImportService {
     }
 
     // Build full path for folder creation
-    final parts = relativeFolderPath.split('/').where((p) => p.isNotEmpty).toList();
+    final parts =
+        relativeFolderPath.split('/').where((p) => p.isNotEmpty).toList();
     String? currentParentId = parentFolderId;
 
     for (final folderName in parts) {

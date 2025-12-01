@@ -28,8 +28,9 @@ class FolderGrid extends StatelessWidget {
           return FolderCard(
             folder: folder,
             onTap: () => onFolderTap(folder),
-            onLongPress:
-                onFolderLongPress != null ? () => onFolderLongPress!(folder) : null,
+            onLongPress: onFolderLongPress != null
+                ? () => onFolderLongPress!(folder)
+                : null,
           );
         },
         childCount: folders.length,

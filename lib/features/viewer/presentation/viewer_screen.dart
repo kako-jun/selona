@@ -140,7 +140,9 @@ class _ViewerScreenState extends ConsumerState<ViewerScreen> {
     // For images: wait fixed interval then advance
     // For videos: VideoPlayerWidget will call onVideoEnded when done
     if (_currentFile.isImage) {
-      Future.delayed(Duration(milliseconds: (_slideshowIntervalSeconds * 1000).toInt()), () {
+      Future.delayed(
+          Duration(milliseconds: (_slideshowIntervalSeconds * 1000).toInt()),
+          () {
         if (_isSlideshow && mounted) {
           _advanceSlideshow();
         }

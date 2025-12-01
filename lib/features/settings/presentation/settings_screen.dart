@@ -321,7 +321,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           _PickerOption(
             value: 'landscape',
             label: l10n.settingsOrientationLandscape,
-            isSelected: _settings.orientationLock == ScreenOrientation.landscape,
+            isSelected:
+                _settings.orientationLock == ScreenOrientation.landscape,
           ),
         ],
         onSelected: (value) {

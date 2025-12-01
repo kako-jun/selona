@@ -122,7 +122,8 @@ class FolderRepository {
   }
 
   /// Check if potentialDescendant is a descendant of ancestorId
-  Future<bool> _isDescendant(String potentialDescendant, String ancestorId) async {
+  Future<bool> _isDescendant(
+      String potentialDescendant, String ancestorId) async {
     var current = await getById(potentialDescendant);
     while (current != null && current.parentId != null) {
       if (current.parentId == ancestorId) return true;

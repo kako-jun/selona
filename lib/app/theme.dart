@@ -113,7 +113,8 @@ class SelonaTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: SelonaColors.surface,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
           borderSide: const BorderSide(color: SelonaColors.border),
@@ -124,7 +125,8 @@ class SelonaTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: SelonaColors.primaryAccent, width: 2),
+          borderSide:
+              const BorderSide(color: SelonaColors.primaryAccent, width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),

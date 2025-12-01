@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:shake/shake.dart';
 
@@ -61,7 +59,7 @@ class PanicService {
     _stopListening(); // Ensure no duplicate listeners
 
     _shakeDetector = ShakeDetector.autoStart(
-      onPhoneShake: () {
+      onPhoneShake: (_) {
         if (_isEnabled) {
           // Mute first (instant, before screen transition)
           _onMuteTriggered?.call();

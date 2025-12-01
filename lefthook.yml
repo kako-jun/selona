@@ -1,0 +1,35 @@
+# lefthook.yml - Git hooks for Selona project
+# https://github.com/evilmartians/lefthook
+#
+# Requires: Flutter SDK in PATH (add to ~/.zshrc):
+#   export PATH="$HOME/.local/flutter/bin:$PATH"
+
+pre-commit:
+  parallel: true
+  commands:
+    dart-format:
+      glob: "*.dart"
+      run: dart format --set-exit-if-changed {staged_files}
+      stage_fixed: true
+    dart-analyze:
+      glob: "*.dart"
+      run: dart analyze --fatal-warnings lib test
+      exclude:
+        - "lib/core/ffi/**"
+    rust-fmt:
+      glob: "*.rs"
+      root: "rust/"
+      run: cargo fmt -- --check
+    rust-clippy:
+      glob: "*.rs"
+      root: "rust/"
+      run: cargo clippy -- -A unexpected_cfgs
+
+pre-push:
+  parallel: true
+  commands:
+    dart-test:
+      run: $HOME/.local/flutter/bin/flutter test
+    rust-test:
+      root: "rust/"
+      run: cargo test

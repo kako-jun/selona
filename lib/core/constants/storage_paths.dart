@@ -18,7 +18,8 @@ class StoragePaths {
   /// Get the app documents directory
   static Directory get appDirectory {
     if (_appDir == null) {
-      throw StateError('StoragePaths not initialized. Call initialize() first.');
+      throw StateError(
+          'StoragePaths not initialized. Call initialize() first.');
     }
     return _appDir!;
   }
@@ -26,7 +27,8 @@ class StoragePaths {
   /// Get the temp directory
   static Directory get tempDirectory {
     if (_tempDir == null) {
-      throw StateError('StoragePaths not initialized. Call initialize() first.');
+      throw StateError(
+          'StoragePaths not initialized. Call initialize() first.');
     }
     return _tempDir!;
   }

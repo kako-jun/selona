@@ -40,8 +40,7 @@ class StorageException extends SelonaException {
 class FileNotFoundException extends StorageException {
   final String path;
 
-  const FileNotFoundException(this.path)
-      : super('File not found: $path');
+  const FileNotFoundException(this.path) : super('File not found: $path');
 }
 
 /// Exception for import failures

@@ -1,5 +1,11 @@
 include: package:flutter_lints/flutter.yaml
 
+analyzer:
+  exclude:
+    - lib/core/ffi/**
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+
 linter:
   rules:
     - prefer_const_constructors

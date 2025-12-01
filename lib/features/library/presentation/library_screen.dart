@@ -159,9 +159,8 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.folderId != null
-            ? _getCurrentFolderName()
-            : l10n.library),
+        title: Text(
+            widget.folderId != null ? _getCurrentFolderName() : l10n.library),
         leading: widget.folderId != null
             ? IconButton(
                 icon: const Icon(Icons.arrow_back),

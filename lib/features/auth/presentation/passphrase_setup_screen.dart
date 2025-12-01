@@ -15,8 +15,7 @@ class PassphraseSetupScreen extends ConsumerStatefulWidget {
       _PassphraseSetupScreenState();
 }
 
-class _PassphraseSetupScreenState
-    extends ConsumerState<PassphraseSetupScreen> {
+class _PassphraseSetupScreenState extends ConsumerState<PassphraseSetupScreen> {
   final _controller = TextEditingController();
   final _focusNode = FocusNode();
   bool _isValid = false;
@@ -196,9 +195,10 @@ class _PassphraseSetupScreenState
                         const SizedBox(width: 8),
                         Text(
                           'Passphrase format',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                fontWeight: FontWeight.w600,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                  ),
                         ),
                       ],
                     ),

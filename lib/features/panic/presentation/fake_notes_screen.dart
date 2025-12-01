@@ -15,7 +15,8 @@ class FakeNotesScreen extends StatefulWidget {
 
 class _FakeNotesScreenState extends State<FakeNotesScreen> {
   final _controller = TextEditingController(
-    text: 'Shopping List\n\n- Milk\n- Bread\n- Eggs\n- Butter\n- Coffee\n\nTODO:\n- Call mom\n- Pay bills\n- Clean room',
+    text:
+        'Shopping List\n\n- Milk\n- Bread\n- Eggs\n- Butter\n- Coffee\n\nTODO:\n- Call mom\n- Pay bills\n- Clean room',
   );
 
   // Secret exit: triple tap on title
@@ -24,7 +25,8 @@ class _FakeNotesScreenState extends State<FakeNotesScreen> {
 
   void _onTitleTap() {
     final now = DateTime.now();
-    if (_lastTapTime != null && now.difference(_lastTapTime!).inMilliseconds < 500) {
+    if (_lastTapTime != null &&
+        now.difference(_lastTapTime!).inMilliseconds < 500) {
       _titleTapCount++;
       if (_titleTapCount >= 3) {
         widget.onExit();
@@ -95,11 +97,13 @@ class _FakeNotesScreenState extends State<FakeNotesScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             IconButton(
-              icon: const Icon(Icons.check_box_outline_blank, color: Colors.black54),
+              icon: const Icon(Icons.check_box_outline_blank,
+                  color: Colors.black54),
               onPressed: () {},
             ),
             IconButton(
-              icon: const Icon(Icons.format_list_bulleted, color: Colors.black54),
+              icon:
+                  const Icon(Icons.format_list_bulleted, color: Colors.black54),
               onPressed: () {},
             ),
             IconButton(

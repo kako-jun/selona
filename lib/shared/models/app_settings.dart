@@ -165,14 +165,6 @@ class AppSettings extends Equatable {
   // History settings
   final int historyLimit;
 
-  // Privacy protection (寝落ち対策)
-  final IdleTimeout idleTimeout;
-  final bool secureScreen; // FLAG_SECURE - prevent screenshots/screen recording
-
-  // Remote hash check for revenge porn prevention
-  final bool remoteHashCheckEnabled;
-  final String? remoteHashServerUrl;
-
   const AppSettings({
     this.passphraseHash,
     this.isInitialized = false,

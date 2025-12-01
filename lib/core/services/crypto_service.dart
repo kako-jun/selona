@@ -50,7 +50,8 @@ class CryptoService {
 
   /// Decode a .pnk file to temp directory for viewing
   /// Returns the path to the decoded temp file
-  Future<String> decodeFileForViewing(String uuid, String originalExtension) async {
+  Future<String> decodeFileForViewing(
+      String uuid, String originalExtension) async {
     _ensurePassphrase();
 
     final pnkPath = StoragePaths.pnkFilePath(uuid);

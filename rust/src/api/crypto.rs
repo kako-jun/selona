@@ -4,10 +4,10 @@
 //! Files are encoded as .pnk (pink PNG) format with a 9-byte seed.
 
 use flutter_rust_bridge::frb;
-use pink072::{decode_file, encode_file, decode_auto};
-use sha2::{Sha256, Digest};
-use std::path::Path;
+use pink072::{decode_auto, decode_file, encode_file};
+use sha2::{Digest, Sha256};
 use std::fs;
+use std::path::Path;
 
 /// Encodes a file to .pnk format
 ///
@@ -20,14 +20,15 @@ use std::fs;
 /// * `Ok(())` on success
 /// * `Err(String)` on failure
 #[frb(sync)]
-pub fn encode_to_pnk(input_path: String, output_path: String, passphrase: String) -> Result<(), String> {
+pub fn encode_to_pnk(
+    input_path: String,
+    output_path: String,
+    passphrase: String,
+) -> Result<(), String> {
     let seed = passphrase_to_seed(&passphrase)?;
 
-    encode_file(
-        Path::new(&input_path),
-        Path::new(&output_path),
-        &seed,
-    ).map_err(|e| format!("Encode failed: {}", e))
+    encode_file(Path::new(&input_path), Path::new(&output_path), &seed)
+        .map_err(|e| format!("Encode failed: {}", e))
 }
 
 /// Decodes a .pnk file to a temporary directory
@@ -41,10 +42,8 @@ pub fn encode_to_pnk(input_path: String, output_path: String, passphrase: String
 /// * `Err(String)` on failure
 #[frb(sync)]
 pub fn decode_from_pnk(input_path: String, output_dir: String) -> Result<String, String> {
-    decode_file(
-        Path::new(&input_path),
-        Path::new(&output_dir),
-    ).map_err(|e| format!("Decode failed: {}", e))
+    decode_file(Path::new(&input_path), Path::new(&output_dir))
+        .map_err(|e| format!("Decode failed: {}", e))
 }
 
 /// Decodes a .pnk file with auto-detection of payload type
@@ -58,10 +57,8 @@ pub fn decode_from_pnk(input_path: String, output_dir: String) -> Result<String,
 /// * `Err(String)` on failure
 #[frb(sync)]
 pub fn decode_from_pnk_auto(input_path: String, output_dir: String) -> Result<Vec<String>, String> {
-    decode_auto(
-        Path::new(&input_path),
-        Path::new(&output_dir),
-    ).map_err(|e| format!("Decode failed: {}", e))
+    decode_auto(Path::new(&input_path), Path::new(&output_dir))
+        .map_err(|e| format!("Decode failed: {}", e))
 }
 
 /// Deletes a temporary file
@@ -74,8 +71,7 @@ pub fn decode_from_pnk_auto(input_path: String, output_dir: String) -> Result<Ve
 /// * `Err(String)` on failure
 #[frb(sync)]
 pub fn delete_temp_file(path: String) -> Result<(), String> {
-    fs::remove_file(Path::new(&path))
-        .map_err(|e| format!("Failed to delete temp file: {}", e))
+    fs::remove_file(Path::new(&path)).map_err(|e| format!("Failed to delete temp file: {}", e))
 }
 
 /// Deletes a temporary directory and all its contents
@@ -179,19 +175,16 @@ pub fn verify_pin(pin: String, hash: String) -> bool {
 pub fn decode_to_bytes(input_path: String) -> Result<Vec<u8>, String> {
     // Create a temporary directory for decoding
     let temp_dir = std::env::temp_dir().join(format!("selona_decode_{}", std::process::id()));
-    fs::create_dir_all(&temp_dir)
-        .map_err(|e| format!("Failed to create temp dir: {}", e))?;
+    fs::create_dir_all(&temp_dir).map_err(|e| format!("Failed to create temp dir: {}", e))?;
 
     // Decode to temp directory
-    let filename = decode_file(
-        Path::new(&input_path),
-        &temp_dir,
-    ).map_err(|e| format!("Decode failed: {}", e))?;
+    let filename = decode_file(Path::new(&input_path), &temp_dir)
+        .map_err(|e| format!("Decode failed: {}", e))?;
 
     // Read the decoded file
     let decoded_path = temp_dir.join(&filename);
-    let data = fs::read(&decoded_path)
-        .map_err(|e| format!("Failed to read decoded file: {}", e))?;
+    let data =
+        fs::read(&decoded_path).map_err(|e| format!("Failed to read decoded file: {}", e))?;
 
     // Cleanup
     let _ = fs::remove_dir_all(&temp_dir);
@@ -250,7 +243,8 @@ mod tests {
             input_file.to_string_lossy().to_string(),
             pnk_file.to_string_lossy().to_string(),
             "a3f7b2c1e".to_string(),
-        ).unwrap();
+        )
+        .unwrap();
 
         assert!(pnk_file.exists());
 
@@ -258,7 +252,8 @@ mod tests {
         let filename = decode_from_pnk(
             pnk_file.to_string_lossy().to_string(),
             output_dir.to_string_lossy().to_string(),
-        ).unwrap();
+        )
+        .unwrap();
 
         assert_eq!(filename, "test.txt");
 

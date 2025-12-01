@@ -137,12 +137,17 @@ class DatabaseManager {
 
     // Create indexes
     await db.execute('CREATE INDEX idx_folders_parent ON folders (parent_id)');
-    await db.execute('CREATE INDEX idx_media_folder ON media_files (folder_id)');
+    await db
+        .execute('CREATE INDEX idx_media_folder ON media_files (folder_id)');
     await db.execute('CREATE INDEX idx_media_type ON media_files (media_type)');
-    await db.execute('CREATE INDEX idx_media_bookmarked ON media_files (is_bookmarked)');
-    await db.execute('CREATE INDEX idx_history_file ON view_history (media_file_id)');
-    await db.execute('CREATE INDEX idx_history_date ON view_history (viewed_at)');
-    await db.execute('CREATE INDEX idx_playlist_items_playlist ON playlist_items (playlist_id)');
+    await db.execute(
+        'CREATE INDEX idx_media_bookmarked ON media_files (is_bookmarked)');
+    await db.execute(
+        'CREATE INDEX idx_history_file ON view_history (media_file_id)');
+    await db
+        .execute('CREATE INDEX idx_history_date ON view_history (viewed_at)');
+    await db.execute(
+        'CREATE INDEX idx_playlist_items_playlist ON playlist_items (playlist_id)');
 
     debugPrint('Database tables created');
   }

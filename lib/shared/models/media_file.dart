@@ -112,7 +112,8 @@ class MediaFile extends Equatable {
       encryptedPath: map['encrypted_path'] as String,
       encryptedThumbnailPath: map['encrypted_thumbnail_path'] as String?,
       fileSize: map['file_size'] as int,
-      importedAt: DateTime.fromMillisecondsSinceEpoch(map['imported_at'] as int),
+      importedAt:
+          DateTime.fromMillisecondsSinceEpoch(map['imported_at'] as int),
       lastViewedAt: map['last_viewed_at'] != null
           ? DateTime.fromMillisecondsSinceEpoch(map['last_viewed_at'] as int)
           : null,
@@ -177,9 +178,8 @@ class MediaFile extends Equatable {
           : (encryptedThumbnailPath ?? this.encryptedThumbnailPath),
       fileSize: fileSize ?? this.fileSize,
       importedAt: importedAt ?? this.importedAt,
-      lastViewedAt: clearLastViewedAt
-          ? null
-          : (lastViewedAt ?? this.lastViewedAt),
+      lastViewedAt:
+          clearLastViewedAt ? null : (lastViewedAt ?? this.lastViewedAt),
       lastPlaybackPosition: clearPlaybackPosition
           ? null
           : (lastPlaybackPosition ?? this.lastPlaybackPosition),

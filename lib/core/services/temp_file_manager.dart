@@ -49,7 +49,8 @@ class TempFileManager {
     }
 
     // Decode the file
-    final tempPath = await _crypto.decodeFileForViewing(uuid, originalExtension);
+    final tempPath =
+        await _crypto.decodeFileForViewing(uuid, originalExtension);
     _activeFiles[uuid] = tempPath;
 
     return tempPath;

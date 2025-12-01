@@ -29,7 +29,8 @@ class Playlist extends Equatable {
   bool get isEmpty => items.isEmpty;
 
   /// Create from database map
-  factory Playlist.fromMap(Map<String, dynamic> map, {List<PlaylistItem>? items}) {
+  factory Playlist.fromMap(Map<String, dynamic> map,
+      {List<PlaylistItem>? items}) {
     return Playlist(
       id: map['id'] as String,
       name: map['name'] as String,
