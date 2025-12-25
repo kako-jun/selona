@@ -80,3 +80,4 @@ credentials.json
 coverage/
 .claude/settings.local.json
 .serena/
+.mcp.json
